@@ -18,15 +18,20 @@
     <div class="panel-body">
         <i class="glyphicon glyphicon-envelope"></i> Dev's Email:<span class="label label-default">@user.Email</span>
         <br /><br />
-        @*<i class="fa fa-shield"></i> Dev's Team:<span class="label label-default">@user.Team.Team</span>*@
+        <i class="glyphicon glyphicon-home"></i> Dev's Team:<span class="label label-default">@user.Team.TeamName</span>
+        <br /><br />
         @if (user.PhoneNumber != null)
         {
             <i class="glyphicon glyphicon-phone"></i>@:Dev's Phone Numer:<span class="label label-default">@user.PhoneNumber</span>
         }
     </div>
     <div class="panel-footer">
-        <a class="btn btn-sm btn-success" href="/User/Edit/@user.Id">Editare utilizator</a>
-        <a class="btn btn-sm btn-success" href="/User/Show/@user.Id">Vizualizare utilizator</a>
+        @using (Html.BeginForm(actionName: "Delete", controllerName: "User", method: FormMethod.Post, routeValues: new { id = user.Id}))
+        {
+            @Html.HttpMethodOverride(HttpVerbs.Delete)
+            <button class="btn btn-success" type="submit">Delete Team</button>
+        }
+        <a class="btn btn-sm btn-success" href="/User/Edit/@user.Id">Edit Dev</a>
     </div>
     <br />
     <br />
