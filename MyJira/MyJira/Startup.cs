@@ -14,7 +14,7 @@ namespace MyJira
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            //initialInsert();
+            initialInsert();
             createAdminUserAndApplicationRoles();
         }
 
@@ -36,7 +36,7 @@ namespace MyJira
                 var user = new ApplicationUser();
                 user.UserName = "admin@admin.com";
                 user.Email = "admin@admin.com";
-                //user.TeamId = 0;
+                user.TeamId = 1;
                 var adminCreated = UserManager.Create(user, "Administrator1!");
                 if (adminCreated.Succeeded)
                 {
@@ -63,9 +63,11 @@ namespace MyJira
         {
             ApplicationDbContext db = new ApplicationDbContext();
             Team team = new Team();
-            team.TeamId = 0;
-            team.TeamName = "DevHead";
-            db.Teams.Add(team);
+            team.TeamName = "Bench";
+            if (db.Teams.Find(1) == null)
+            {
+                db.Teams.Add(team);
+            }
             db.SaveChanges();
         }
     }
