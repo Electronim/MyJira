@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "List of Devs";
+}
+
+<ol class="breadcrumb"
+    <li><h3>@ViewBag.Title</h3></li>
+</ol>
+
+@if (TempData.ContainsKey("message"))
+{
+    <h3 class="alert alert-info" role="alert">@ViewBag.message</h3>
+}
+
+@foreach (MyJira.Models.ApplicationUser user in ViewBag.UserList)
+{
+    <div class="panel-heading">Dev's Name: @user.UserName</div>
+    <div class="panel-body">
+        <i class="glyphicon glyphicon-envelope"></i> Dev's Email:<span class="label label-default">@user.Email</span>
+        <br /><br />
+        @*<i class="fa fa-shield"></i> Dev's Team:<span class="label label-default">@user.Team.Team</span>*@
+        @if (user.PhoneNumber != null)
+        {
+            <i class="glyphicon glyphicon-phone"></i>@:Dev's Phone Numer:<span class="label label-default">@user.PhoneNumber</span>
+        }
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-sm btn-success" href="/User/Edit/@user.Id">Editare utilizator</a>
+        <a class="btn btn-sm btn-success" href="/User/Show/@user.Id">Vizualizare utilizator</a>
+    </div>
+    <br />
+    <br />
+}
