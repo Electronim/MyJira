@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "List of Teams";
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<h3>@ViewBag.message</h3>
+
+@foreach (MyJira.Models.Team team in ViewBag.Teams)
+{
+    <div class="panel panel-default">
+        <div class="panel-headin">@team.TeamName</div>
+        <div class="panel-footer">
+            @using (Html.BeginForm(actionName: "Delete", controllerName: "Team", method: FormMethod.Post, routeValues: new { id = team.TeamId }))
+            {
+                @Html.HttpMethodOverride(HttpVerbs.Delete)
+                <br />
+                <button class="btn btn-success" type="submit">Delete Team</button>
+            }
+        </div>
+    </div>
+}
+
+<br />
+<a class="btn btn-success" href="/Team/New">Add Team</a>
+<br />
