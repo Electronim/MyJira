@@ -1,0 +1,21 @@
+﻿
+@model MyJira.Models.Team
+
+@{
+    ViewBag.Title = "Add a new Team";
+}
+
+<h2>@ViewBag.Title</h2>
+<br />
+
+@using (Html.BeginForm(actionName: "New", controllerName: "Team"))
+{ 
+    @Html.Label("TeamName", "Team name")
+    <br />
+    @Html.TextBox("TeamName", null, new { @class = "form-control" })
+    @Html.ValidationMessageFor(m => m.TeamName, null, new { @class = "text-danger" })
+    <br />
+    <br />
+
+<button class="btn btn-sm btn-success" type="submit">Add Team</button>
+}
