@@ -20,6 +20,6 @@ namespace MyJira.Models
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
 
-        public ICollection<Task> Tasks { get; set; }
+        public virtual ICollection<Task> Tasks { get; set; }
     }
 }
