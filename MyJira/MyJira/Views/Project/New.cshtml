@@ -1,0 +1,30 @@
+﻿@model MyJira.Models.Project
+
+@{
+    ViewBag.Title = "Add a new project";
+}
+
+<h2>@ViewBag.Title</h2>
+<br />
+
+@using (Html.BeginForm(actionName: "New", controllerName: "Project"))
+{
+
+    @Html.Label("Name", "Project name");
+    <br />
+    @Html.TextBox("Name", null, new { @class = "form-control" })
+    @Html.ValidationMessageFor(m => m.Name, null, new { @class = "text-danger" })
+    <br />
+
+    @Html.Label("Description", "Project description");
+    <br />
+    @Html.TextBox("Description", null, new { @class = "form-control" })
+    @Html.ValidationMessageFor(m => m.Description, null, new { @class = "text-danger" })
+    <br />
+
+    @Html.HiddenFor(m => m.UserId);
+
+    <br />
+
+    <button class="btn btn-sm btn-success" type="submit">Add Project</button>
+}
