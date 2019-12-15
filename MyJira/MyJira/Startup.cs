@@ -14,7 +14,7 @@ namespace MyJira
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            initialInsert();
+            InitialInsert();
             createAdminUserAndApplicationRoles();
         }
 
@@ -59,7 +59,7 @@ namespace MyJira
             }
         }
 
-        private void initialInsert()
+        private void InitialInsert()
         {
             ApplicationDbContext db = new ApplicationDbContext();
             Team team = new Team();

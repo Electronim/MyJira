@@ -54,14 +54,14 @@ namespace MyJira
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "433752723985634",
+               appSecret: "727d6edb7981c69c381593010a68f644");
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{
-            //    ClientId = "",
-            //    ClientSecret = ""
+            //    ClientId = "733307361015-n7vgcrjps29i0ttrbkljm0hv493s7khr.apps.googleusercontent.com",
+            //    ClientSecret = "VhUpZrPn4haUxOSHeR3C1Zlj"
             //});
 
             app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);

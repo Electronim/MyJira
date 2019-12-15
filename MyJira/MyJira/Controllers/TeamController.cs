@@ -26,12 +26,6 @@ namespace MyJira.Controllers
 
         }
 
-        //public ActionResult Show(int id)
-        //{
-        //    Category category = db.Categories.Find(id);
-        //    return View(category);
-        //}
-
         public ActionResult New()
         {
             Team team = new Team();
@@ -47,7 +41,7 @@ namespace MyJira.Controllers
                 {
                     db.Teams.Add(team);
                     db.SaveChanges();
-                    TempData["message"] = "Team has been added!";
+                    TempData["message"] = "Team has been added successfully!";
                     return RedirectToAction("Index");
                 }
                 else
@@ -59,36 +53,36 @@ namespace MyJira.Controllers
             }
         }
 
-        //public ActionResult Edit(int id)
-        //{
-        //    Category category = db.Categories.Find(id);
-        //    return View(category);
-        //}
+        public ActionResult Edit(int id)
+        {
+            Team team = db.Teams.Find(id);
+            return View(team);
+        }
 
-        //[HttpPut]
-        //public ActionResult Edit(int id, Category requestCategory)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            Category category = db.Categories.Find(id);
-        //            if (TryUpdateModel(category))
-        //            {
-        //                category.CategoryName = requestCategory.CategoryName;
-        //                db.SaveChanges();
-        //                TempData["message"] = "Categoria a fost editata!";
-        //            }
-        //            return RedirectToAction("Index");
-        //        }
-        //        else
-        //            return View(requestCategory);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return View(requestCategory);
-        //    }
-        //}
+        [HttpPut]
+        public ActionResult Edit(int id, Team requestCategory)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    Team team = db.Teams.Find(id);
+                    if (TryUpdateModel(team))
+                    {
+                        team.TeamName = requestCategory.TeamName;
+                        db.SaveChanges();
+                        TempData["message"] = "Team has been modyfied successfully!";
+                    }
+                    return RedirectToAction("Index");
+                }
+                else
+                    return View(requestCategory);
+            }
+            catch (Exception e)
+            {
+                return View(requestCategory);
+            }
+        }
 
         [HttpDelete]
         public ActionResult Delete(int id)
@@ -96,7 +90,7 @@ namespace MyJira.Controllers
             Team team = db.Teams.Find(id);
             db.Teams.Remove(team);
             db.SaveChanges();
-            TempData["message"] = "Team has been deleted!";
+            TempData["message"] = "Team has been deleted successfully!";
             return RedirectToAction("Index");
         }
     }

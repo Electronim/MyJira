@@ -11,14 +11,15 @@
 @foreach (MyJira.Models.Team team in ViewBag.Teams)
 {
     <div class="panel panel-default">
-        <div class="panel-headin">@team.TeamName</div>
-        <div class="panel-footer">
+        <div class="panel-heading">@team.TeamName</div>
+        <div class="panel-body">
             @using (Html.BeginForm(actionName: "Delete", controllerName: "Team", method: FormMethod.Post, routeValues: new { id = team.TeamId }))
             {
                 @Html.HttpMethodOverride(HttpVerbs.Delete)
                 <br />
                 <button class="btn btn-success" type="submit">Delete Team</button>
             }
+            <a class="btn btn-sm btn-success" href="/Team/Edit/@team.TeamId">Edit Team</a>
         </div>
     </div>
 }
