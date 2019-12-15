@@ -60,7 +60,7 @@ namespace MyJira.Controllers
         }
 
         [HttpPut]
-        public ActionResult Edit(int id, Team requestCategory)
+        public ActionResult Edit(int id, Team requestTeam)
         {
             try
             {
@@ -69,18 +69,18 @@ namespace MyJira.Controllers
                     Team team = db.Teams.Find(id);
                     if (TryUpdateModel(team))
                     {
-                        team.TeamName = requestCategory.TeamName;
+                        team.TeamName = requestTeam.TeamName;
                         db.SaveChanges();
-                        TempData["message"] = "Team has been modyfied successfully!";
+                        TempData["message"] = "Team has been modified successfully!";
                     }
                     return RedirectToAction("Index");
                 }
                 else
-                    return View(requestCategory);
+                    return View(requestTeam);
             }
             catch (Exception e)
             {
-                return View(requestCategory);
+                return View(requestTeam);
             }
         }
 
