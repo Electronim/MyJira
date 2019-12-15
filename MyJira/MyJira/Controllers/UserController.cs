@@ -89,7 +89,7 @@ namespace MyJira.Controllers
             UserManager.Delete(user);
             db.SaveChanges();
 
-            TempData["message"] = "Utilizatorul a fost sters cu succes";
+            TempData["message"] = "Dev has been removed succesfully";
             return RedirectToAction("Index");
         }
 
