@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using MyJira.Models;
 
 namespace MyJira.Controllers
@@ -14,10 +15,7 @@ namespace MyJira.Controllers
         // GET: Project
         public ActionResult Index()
         {
-            var projects =  from project in db.Projects
-                            orderby project.Name
-                            select project;
-
+            var projects = db.Projects.Include("User");
             ViewBag.Projects = projects;
 
             if (TempData.ContainsKey("message"))
@@ -28,10 +26,19 @@ namespace MyJira.Controllers
             return View();
         }
 
+        public ActionResult Show(int id)
+        {
+            var project = db.Projects.Find(id);
+
+            return View(project);
+        }
+
         public ActionResult New()
         {
-            var project = new Project();
-            
+            var project = new Project
+            {
+                UserId = User.Identity.GetUserId()
+            };
             return View(project);
         }
 
@@ -53,6 +60,43 @@ namespace MyJira.Controllers
             catch (Exception)
             {
                 return View(project);
+            }
+        }
+        public ActionResult Edit(int id)
+        {
+            var project = db.Projects.Find(id);
+
+            return View(project);
+        }
+
+        [HttpPut]
+        public ActionResult Edit(int id, Project requestProject)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var project = db.Projects.Find(id);
+
+                    if (TryUpdateModel(project))
+                    {
+                        var oldName = project.Name;
+
+                        project.Name = requestProject.Name;
+                        project.Description = requestProject.Description;
+
+                        db.SaveChanges();
+                        TempData["message"] = "The project " + oldName + " has been modified!";
+                    }
+
+                    return RedirectToAction("Index");
+                }
+
+                return View(requestProject);
+            }
+            catch (Exception)
+            {
+                return View(requestProject);
             }
         }
 

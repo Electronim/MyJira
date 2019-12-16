@@ -5,6 +5,8 @@ using MyJira.Models;
 using Owin;
 using System;
 using System.Data.Entity.Validation;
+using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 
 [assembly: OwinStartupAttribute(typeof(MyJira.Startup))]
 namespace MyJira
@@ -61,9 +63,11 @@ namespace MyJira
 
         private void InitialInsert()
         {
-            ApplicationDbContext db = new ApplicationDbContext();
-            Team team = new Team();
-            team.TeamName = "Bench";
+            ApplicationDbContext db = ApplicationDbContext.Create();
+            var team = new Team {
+                TeamName = "Bench"
+            };
+
             if (db.Teams.Find(1) == null)
             {
                 db.Teams.Add(team);

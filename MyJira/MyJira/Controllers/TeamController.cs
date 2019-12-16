@@ -23,7 +23,12 @@ namespace MyJira.Controllers
             }
 
             return View();
+        }
 
+        public ActionResult Show(int id)
+        {
+            var team = db.Teams.Find(id);
+            return View(team);
         }
 
         public ActionResult New()

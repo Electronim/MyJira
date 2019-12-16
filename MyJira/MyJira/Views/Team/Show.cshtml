@@ -1,0 +1,19 @@
+﻿@model MyJira.Models.Team
+
+@{
+    ViewBag.Title = "Show";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<div class="panel panel-default">
+    <div class="panel-heading">@Model.TeamName</div>
+
+    <div class="panel-body">
+        @foreach (var user in Model.Devs)
+        {
+            <strong>@user.UserName</strong>
+            <br/>
+        }
+    </div>
+</div>
