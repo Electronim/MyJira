@@ -1,0 +1,33 @@
+﻿@model MyJira.Models.Project
+
+@{
+    ViewBag.Title = "Edit project " + Model.Name;
+}
+
+<h2>@ViewBag.Title</h2>
+<br />
+
+@using (Html.BeginForm(actionName: "Edit", controllerName: "Project"))
+{
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+
+    @Html.Label("Name", "Project name")
+    <br />
+
+    @Html.EditorFor(m => m.Name);
+    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+    <br />
+    <br />
+
+    @Html.Label("Description", "Project description")
+    <br />
+    @Html.EditorFor(m => m.Description)
+    @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+    <br />
+    <br />
+
+    @Html.HiddenFor(m => m.Id)
+    <br />
+
+    <button class="btn btn-sm btn-success" type="submit">Apply changes</button>
+}

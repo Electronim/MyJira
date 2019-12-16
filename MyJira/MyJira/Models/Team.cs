@@ -14,7 +14,10 @@ namespace MyJira.Models
         [Required(ErrorMessage = "Name of the Team is mandatory")]
         [StringLength(30, ErrorMessage = "Team name cannot have more than 30 characters")]
         public string TeamName { get; set; }
+
         public virtual ICollection<ApplicationUser> Devs { get; set; }
+
+        // public virtual ICollection<Project> Projects { get; set; } 
 
     }
 }

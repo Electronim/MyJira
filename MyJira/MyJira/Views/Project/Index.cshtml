@@ -11,20 +11,19 @@
 {
     <div class="panel panel-default">
         <div class="panel-heading">@project.Name</div>
-        
+
         <div class="panel-body">
             Project description: <strong>@project.Description</strong>
+            <br/>
+            <i class="glyphicon glyphicon-user"> </i><i> created by </i><strong> @project.User.UserName </strong>
         </div>
 
         <div class="panel-footer">
-            @using (Html.BeginForm(actionName: "Delete", controllerName: "Project", method: FormMethod.Post, routeValues: new { id = project.Id }))
-            {
-                @Html.HttpMethodOverride(HttpVerbs.Delete)
-                <br />
-                <button class="btn btn-success" type="submit">Delete Project</button>
-            }
+            <a class="btn btn-sm btn-success" href="/Project/Show/@project.Id">View more</a>
         </div>
     </div>
+
+    <br/>
 }
 
 <br />
