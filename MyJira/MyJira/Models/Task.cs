@@ -33,9 +33,9 @@ namespace MyJira.Models
         [DataType(DataType.DateTime, ErrorMessage = "Date and Time is required")]
         public DateTime FinishTime { get; set; }
 
-        //[Required(ErrorMessage = "The project is required")]
-        //public int ProjectId { get; set; }
-        //public virtual Project Project { get; set; }
+        [Required(ErrorMessage = "The project is required")]
+        public int ProjectId { get; set; }
+        public virtual Project Project { get; set; }
 
         public string AssigneeId { get; set; }
         public virtual ApplicationUser Assignee { get; set; }

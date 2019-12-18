@@ -12,6 +12,8 @@
 {
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
+    @Html.HiddenFor(m => m.ProjectId)
+
     @Html.Label("Title", "Task title")
     <br />
     @Html.TextBox("Title", null, new { @class = "form-control" })

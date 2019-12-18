@@ -6,13 +6,16 @@
 <h2>@ViewBag.Title</h2>
 <hr />
 
-<h3>@ViewBag.message</h3>
+@if (TempData.ContainsKey("message"))
+{
+    <h3 class="alert alert-info" role="alert">@ViewBag.message</h3>
+}
 
 @foreach (MyJira.Models.Team team in ViewBag.Teams)
 {
     <div class="panel panel-default">
         <div class="panel-heading">@team.TeamName</div>
-        
+
         <div class="panel-footer">
             <a class="btn btn-sm btn-success" href="/Team/Show/@team.TeamId">View more</a>
         </div>
