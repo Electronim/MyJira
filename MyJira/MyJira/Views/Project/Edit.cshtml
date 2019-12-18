@@ -13,7 +13,6 @@
 
     @Html.Label("Name", "Project name")
     <br />
-
     @Html.EditorFor(m => m.Name);
     @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
     <br />

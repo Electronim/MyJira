@@ -1,0 +1,39 @@
+﻿@model MyJira.Models.Task
+
+@{
+    ViewBag.Title2 = "Show";
+}
+
+<h1>@ViewBag.Title2</h1>
+
+<div class="panel panel-default">
+    <div class="panel panel-heading"> @Model.Title</div>
+    
+    <div class="panel panel-body">
+        <p><strong>Description:</strong> @Model.Description</p>
+        <p><strong>Status:</strong> @Model.Status</p>
+        <p><i class="glyphicon glyphicon-user"> </i><i> reported by </i><strong> @Model.Reporter.UserName </strong></p>
+        @if (Model.AssigneeId == null)
+        {
+             <p><strong>Assignee:</strong> None</p>
+        }
+        else
+        {
+            <p><strong>Assignee:</strong> @Model.Assignee.UserName</p>
+        }
+        <p><strong>Start time:</strong> <i>@Model.StartTime</i></p>
+        @if (Model.Status == MyJira.Models.TaskStatus.Done)
+        {
+            <p><strong>Finish time:</strong> <i>@Model.FinishTime</i></p>
+        }
+    </div>
+
+    <div class="panel panel-footer">
+        <a class="btn btn-sm btn-success" href="/Task/Edit/@Model.Id">Edit</a>
+        @using (Html.BeginForm(actionName: "Delete", controllerName: "Task", method: FormMethod.Post, routeValues: new { id = @Model.Id }, htmlAttributes: new { style = "display: inline" }))
+        {
+            @Html.HttpMethodOverride(HttpVerbs.Delete)
+            <button class="btn btn-sm btn-success" type="submit">Delete</button>
+        }
+    </div>
+</div>

@@ -4,7 +4,7 @@
     ViewBag.Title = "Dev Edit";
 }
 
-<h2>@ViewBag.Titlu</h2>
+<h2>@ViewBag.Title</h2>
 
 <form method="post" action="/User/Edit/@Model.Id">
 
@@ -25,14 +25,14 @@
     @Html.ValidationMessageFor(m => m.Email, null, new { @class = "text-danger" })
     <br /><br />
 
-    @Html.Label("PhoneNumber", "Numar telefon")
+    @Html.Label("PhoneNumber", "Phone Number")
     <br />
     @Html.EditorFor(m => m.PhoneNumber)
     <br /><br />
 
 
     <label>Select Team</label>
-    @Html.DropDownListFor(m => m.TeamId, new SelectList(Model.AllTeams, "Value", "Text", Model.Team.TeamName), "Team", new { @class = "form-control" })
+    @Html.DropDownListFor(m => m.TeamId, new SelectList(Model.AllTeams, "Value", "Text"), "Team", new { @class = "form-control" })
     @Html.ValidationMessageFor(m => m.TeamId, null, new { @class = "text-danger" })
     <br />
 

@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title2 = "List of Tasks";
+}
+
+<h2>@ViewBag.Title2</h2>
+<hr />
+
+@if (ViewBag.message != null)
+{
+    <h3 class="alert alert-info" role="alert">@ViewBag.message</h3>
+}
+
+@foreach (MyJira.Models.Task task in ViewBag.tasks)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">@task.Title</div>
+        
+        <div class="panel-body">
+            <strong>Continut articol:</strong> @task.Description
+            <br />
+            <strong>Status:</strong> @task.Status
+            <br />
+            <i class="glyphicon glyphicon-user"> </i><i> reported by </i><strong> @task.Reporter.UserName </strong>
+        </div>
+
+        <div class="panel-footer">
+            <a class="btn btn-sm btn-success" href="/Task/Show/@task.Id">View more</a>
+        </div>
+    </div>
+
+    <br />
+}
+
+<br />
+<a class="btn btn-success" href="/Task/New">Create Task</a>
+<br />

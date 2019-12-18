@@ -13,7 +13,16 @@
         @foreach (var user in Model.Devs)
         {
             <strong>@user.UserName</strong>
-            <br/>
+            <br />
+        }
+    </div>
+
+    <div class="panel-footer">
+        <a class="btn btn-sm btn-success" href="/Team/Edit/@Model.TeamId">Edit</a>
+        @using (Html.BeginForm(actionName: "Delete", controllerName: "Team", method: FormMethod.Post, routeValues: new { id = Model.TeamId }, htmlAttributes: new { style = "display: inline" }))
+        {
+            @Html.HttpMethodOverride(HttpVerbs.Delete)
+            <button class="btn btn-sm btn-success" type="submit">Delete</button>
         }
     </div>
 </div>

@@ -32,6 +32,7 @@ namespace MyJira.Controllers
         public ActionResult Edit(string id)
         {
             ApplicationUser user = db.Users.Find(id);
+
             user.AllRoles = GetAllRoles();
             user.AllTeams = GetAllTeams();
             var userRole = user.Roles.FirstOrDefault();
@@ -101,7 +102,8 @@ namespace MyJira.Controllers
             var roles = from role in db.Roles select role;
             foreach (var role in roles)
             {
-                if (role.Name.Equals("Organizer")){
+                if (role.Name.Equals("Organizer"))
+                {
                     continue;
                 }
                 selectList.Add(new SelectListItem
