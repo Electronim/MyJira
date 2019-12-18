@@ -1,0 +1,33 @@
+﻿
+@model MyJira.Models.Task
+
+@{
+    ViewBag.Title2 = "Create Task";
+}
+
+<h2>@ViewBag.Title2</h2>
+<br />
+
+@using (Html.BeginForm(actionName: "New", controllerName: "Task"))
+{
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.Label("Title", "Task title")
+    <br />
+    @Html.TextBox("Title", null, new { @class = "form-control" })
+    @Html.ValidationMessageFor(m => m.Title, null, new { @class = "text-danger" })
+    <br />
+
+    @Html.Label("Description", "Task Description")
+    <br />
+    @Html.TextArea("Description", null, new { @class = "form-control" })
+    @Html.ValidationMessageFor(m => m.Description, null, new { @class = "text-danger" })
+    <br />
+
+    @Html.Hidden("StartTime", DateTime.Now, new { @class = "form-control" })
+    @Html.ValidationMessageFor(m => m.StartTime, null, new { @class = "text-danger" })
+
+    @Html.HiddenFor(m => m.ReporterId)
+
+    <button class="btn btn-sm btn-success" type="submit">Create</button>
+}
