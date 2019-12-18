@@ -57,7 +57,7 @@ namespace MyJira.Controllers
 
                 return View(project);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return View(project);
             }

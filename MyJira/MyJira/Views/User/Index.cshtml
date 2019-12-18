@@ -3,9 +3,8 @@
     ViewBag.Title = "List of Devs";
 }
 
-<ol class="breadcrumb"
-    <li><h3>@ViewBag.Title</h3></li>
-</ol>
+<h3>@ViewBag.Title</h3>
+<hr />
 
 @if (TempData.ContainsKey("message"))
 {
@@ -14,25 +13,30 @@
 
 @foreach (MyJira.Models.ApplicationUser user in ViewBag.UserList)
 {
-    <div class="panel-heading">Dev's Name: @user.UserName</div>
-    <div class="panel-body">
-        <i class="glyphicon glyphicon-envelope"></i> Dev's Email:<span class="label label-default">@user.Email</span>
-        <br /><br />
-        <i class="glyphicon glyphicon-home"></i> Dev's Team:<span class="label label-default">@user.Team.TeamName</span>
-        <br /><br />
-        @if (user.PhoneNumber != null)
-        {
-            <i class="glyphicon glyphicon-phone"></i>@:Dev's Phone Numer:<span class="label label-default">@user.PhoneNumber</span>
-        }
+    <div class="panel panel-default">
+        <div class="panel-heading"><strong>Dev's Name:</strong> @user.UserName</div>
+
+        <div class="panel-body">
+            <i class="glyphicon glyphicon-envelope"></i> Dev's Email: <span class="label label-default">@user.Email</span>
+            <br />
+            <i class="glyphicon glyphicon-home"></i> Dev's Team: <span class="label label-default">@user.Team.TeamName</span>
+            <br />
+            @if (user.PhoneNumber != null)
+            {
+                <i class="glyphicon glyphicon-phone"></i>@:Dev's Phone Number: <span class="label label-default">@user.PhoneNumber</span>
+            }
+        </div>
+
+        <div class="panel-footer">
+            <a class="btn btn-sm btn-success" href="/User/Edit/@user.Id">Edit</a>
+            @using (Html.BeginForm(actionName: "Delete", controllerName: "User", method: FormMethod.Post, routeValues: new { id = user.Id }, htmlAttributes: new { style = "display: inline" }))
+            {
+                @Html.HttpMethodOverride(HttpVerbs.Delete)
+                <button class="btn btn-sm btn-success" type="submit">Delete</button>
+            }
+        </div>
     </div>
-    <div class="panel-footer">
-        @using (Html.BeginForm(actionName: "Delete", controllerName: "User", method: FormMethod.Post, routeValues: new { id = user.Id}))
-        {
-            @Html.HttpMethodOverride(HttpVerbs.Delete)
-            <button class="btn btn-success" type="submit">Delete</button>
-        }
-        <a class="btn btn-success" href="/User/Edit/@user.Id">Edit</a>
-    </div>
+
     <br />
     <br />
 }

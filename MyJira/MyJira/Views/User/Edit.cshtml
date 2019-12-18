@@ -6,8 +6,8 @@
 
 <h2>@ViewBag.Title</h2>
 
-<form method="post" action="/User/Edit/@Model.Id">
-
+@using (Html.BeginForm(actionName: "Edit", controllerName: "User"))
+{
     @Html.HttpMethodOverride(HttpVerbs.Put)
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
@@ -17,30 +17,31 @@
     <br />
     @Html.EditorFor(m => m.UserName)
     @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "text-danger" })
-    <br /> <br />
+    <br />
+    <br />
 
     @Html.Label("Email", "Email")
     <br />
     @Html.EditorFor(m => m.Email)
     @Html.ValidationMessageFor(m => m.Email, null, new { @class = "text-danger" })
-    <br /><br />
+    <br />
+    <br />
 
     @Html.Label("PhoneNumber", "Phone Number")
     <br />
     @Html.EditorFor(m => m.PhoneNumber)
-    <br /><br />
+    <br />
+    <br />
 
 
-    <label>Select Team</label>
+    <i class="glyphicon glyphicon-th-list"></i> <label>Select Team</label>
     @Html.DropDownListFor(m => m.TeamId, new SelectList(Model.AllTeams, "Value", "Text"), "Team", new { @class = "form-control" })
     @Html.ValidationMessageFor(m => m.TeamId, null, new { @class = "text-danger" })
     <br />
 
-    <i class="glyphicon glyphicon-th-list"></i>
-    <label>Select Role</label>
+    <i class="glyphicon glyphicon-th-list"></i> <label>Select Role</label>
     @Html.DropDownList("newRole", new SelectList(Model.AllRoles, "Value", "Text", (string)ViewBag.userRole), "Role", new { @class = "form-control" })
     <br />
 
     <button class="btn btn-sm btn-success" type="submit">Submit changes</button>
-
-</form>
+}

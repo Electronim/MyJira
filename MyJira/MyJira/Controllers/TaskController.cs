@@ -31,9 +31,10 @@ namespace MyJira.Controllers
             return View(task);
         }
 
-        public ActionResult New()
+        public ActionResult New(int id)
         {
             Task task = new Task();
+            task.ProjectId = id;
             task.ReporterId = User.Identity.GetUserId();
             return View(task);
         }

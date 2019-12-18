@@ -6,8 +6,8 @@
 
 <h2>@ViewBag.Title</h2>
 
-<form method="post" action="/Team/Edit/@Model.TeamId">
-
+@using (Html.BeginForm(actionName: "Edit", controllerName: "Team"))
+{
     @Html.HttpMethodOverride(HttpVerbs.Put)
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
@@ -20,5 +20,4 @@
     <br /> <br />
 
     <button class="btn btn-sm btn-success" type="submit">Submit changes</button>
-
-</form>
+}

@@ -14,7 +14,7 @@
 @foreach (MyJira.Models.Task task in ViewBag.tasks)
 {
     <div class="panel panel-default">
-        <div class="panel-heading">@task.Title</div>
+        <div class="panel-heading"> <span class="label label-default">@task.Project.Name</span> | @task.Title</div>
         
         <div class="panel-body">
             <strong>Continut articol:</strong> @task.Description
@@ -32,6 +32,3 @@
     <br />
 }
 
-<br />
-<a class="btn btn-success" href="/Task/New">Create Task</a>
-<br />
