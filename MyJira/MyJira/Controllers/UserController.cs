@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using MyJira.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -41,7 +42,7 @@ namespace MyJira.Controllers
         }
 
         [HttpPut]
-        public ActionResult Edit(string id, ApplicationUser newUser)
+        public ActionResult Edit(string id, ApplicationUser newUser, HttpPostedFileBase file)
         {
             ApplicationUser user = db.Users.Find(id);
             user.AllRoles = GetAllRoles();
@@ -58,6 +59,20 @@ namespace MyJira.Controllers
                     user.Email = newUser.Email;
                     user.PhoneNumber = newUser.PhoneNumber;
                     user.TeamId = newUser.TeamId;
+
+                    string photoPath = null;
+                    if (file != null)
+                    {
+                        if (file.ContentLength <= 0)
+                        {
+                            throw new Exception("Error while uploading");
+                        }
+
+                        photoPath = Path.GetFileName(file.FileName);
+                        string path = Path.Combine(Server.MapPath("~/Photos"), photoPath);
+                        file.SaveAs(path);
+                    }
+                    user.PhotoPath = photoPath;
 
                     var roles = from role in db.Roles select role;
                     foreach (var role in roles)
