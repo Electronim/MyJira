@@ -6,7 +6,7 @@
 
 <h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm(actionName: "Edit", controllerName: "User"))
+@using (Html.BeginForm("Edit", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.HttpMethodOverride(HttpVerbs.Put)
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
@@ -35,12 +35,16 @@
 
 
     <i class="glyphicon glyphicon-th-list"></i> <label>Select Team</label>
-    @Html.DropDownListFor(m => m.TeamId, new SelectList(Model.AllTeams, "Value", "Text"), "Team", new { @class = "form-control" })
+    @Html.DropDownListFor(m => m.TeamId, new SelectList(Model.AllTeams, "Value", "Text"), null , new { @class = "form-control" })
     @Html.ValidationMessageFor(m => m.TeamId, null, new { @class = "text-danger" })
     <br />
 
     <i class="glyphicon glyphicon-th-list"></i> <label>Select Role</label>
-    @Html.DropDownList("newRole", new SelectList(Model.AllRoles, "Value", "Text", (string)ViewBag.userRole), "Role", new { @class = "form-control" })
+    @Html.DropDownList("newRole", new SelectList(Model.AllRoles, "Value", "Text", (string)ViewBag.userRole), null, new { @class = "form-control" })
+    <br />
+
+    <label for="file"> Upload Image:</label>
+    <input type="file" name="file" style="width: 100%;" />
     <br />
 
     <button class="btn btn-sm btn-success" type="submit">Submit changes</button>
