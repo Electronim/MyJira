@@ -12,10 +12,10 @@
     <div class="panel-body">
         Project description: <strong>@Model.Description</strong>
         <br />
-        <i class="glyphicon glyphicon-user"> </i><i> created by </i><strong> @Model.User.UserName </strong>
+        @*<i class="glyphicon glyphicon-user"> </i><i> created by </i><strong> @Model.Leader.UserName </strong>*@
 
         <br />
-        <a class="btn btn-outline-info" href="/Task/New/@Model.Id">Create Task</a>
+        <a class="btn btn-success" href="/Team/New/@Model.Id">Add Team</a>
     </div>
 
     <div class="panel-footer">

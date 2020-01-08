@@ -15,8 +15,9 @@ namespace MyJira.Controllers
         // GET: Project
         public ActionResult Index()
         {
-            var projects = db.Projects.Include("User");
+            var projects = db.Projects;
             ViewBag.Projects = projects;
+
 
             if (TempData.ContainsKey("message"))
             {
@@ -37,7 +38,7 @@ namespace MyJira.Controllers
         {
             var project = new Project
             {
-                UserId = User.Identity.GetUserId()
+                // LeaderId = User.Identity.GetUserId()
             };
             return View(project);
         }

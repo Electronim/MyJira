@@ -5,6 +5,7 @@ using MyJira.Models;
 using Owin;
 using System;
 using System.Data.Entity.Validation;
+using System.Linq;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 
@@ -27,22 +28,18 @@ namespace MyJira
             context.Configuration.LazyLoadingEnabled = true;
 
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
             if (!roleManager.RoleExists("Administrator"))
             {
-                var role = new IdentityRole();
-                role.Name = "Administrator";
+                var role = new IdentityRole {Name = "Administrator"};
                 roleManager.Create(role);
 
-                var user = new ApplicationUser();
-                user.UserName = "admin@admin.com";
-                user.Email = "admin@admin.com";
-                user.TeamId = 1;
-                var adminCreated = UserManager.Create(user, "Administrator1!");
+                var user = new ApplicationUser {UserName = "admin@admin.com", Email = "admin@admin.com", TeamId = 1};
+                var adminCreated = userManager.Create(user, "Administrator1!");
                 if (adminCreated.Succeeded)
                 {
-                    UserManager.AddToRole(user.Id, "Administrator");
+                    userManager.AddToRole(user.Id, "Administrator");
                 }
                 context.SaveChanges();
             }
@@ -63,9 +60,23 @@ namespace MyJira
 
         private void InitialInsert()
         {
-            ApplicationDbContext db = ApplicationDbContext.Create();
-            var team = new Team {
-                TeamName = "Bench"
+            var db = ApplicationDbContext.Create();
+
+            var project = new Project
+            {
+                Name = "Default",
+                Description = "default project"
+            };
+
+            if (db.Projects.Find(1) == null)
+            {
+                db.Projects.Add(project);
+            }
+
+            var team = new Team
+            {
+                Name = "Bench",
+                ProjectId = 1
             };
 
             if (db.Teams.Find(1) == null)

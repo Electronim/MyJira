@@ -32,10 +32,11 @@ namespace MyJira.Controllers
 
         public ActionResult Edit(string id)
         {
-            ApplicationUser user = db.Users.Find(id);
+            var user = db.Users.Find(id);
 
             user.AllRoles = GetAllRoles();
             user.AllTeams = GetAllTeams();
+
             var userRole = user.Roles.FirstOrDefault();
             ViewBag.userRole = userRole.RoleId;
             return View(user);
@@ -44,14 +45,15 @@ namespace MyJira.Controllers
         [HttpPut]
         public ActionResult Edit(string id, ApplicationUser newUser, HttpPostedFileBase file)
         {
-            ApplicationUser user = db.Users.Find(id);
+            var user = db.Users.Find(id);
             user.AllRoles = GetAllRoles();
             user.AllTeams = GetAllTeams();
+
             try
             {
-                ApplicationDbContext context = new ApplicationDbContext();
+                var context = new ApplicationDbContext();
                 var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
                 if (TryUpdateModel(user))
                 {
@@ -69,7 +71,7 @@ namespace MyJira.Controllers
                         }
 
                         photoPath = Path.GetFileName(file.FileName);
-                        string path = Path.Combine(Server.MapPath("~/Photos"), photoPath);
+                        var path = Path.Combine(Server.MapPath("~/Photos"), photoPath);
                         file.SaveAs(path);
                     }
                     user.PhotoPath = photoPath;
@@ -77,11 +79,11 @@ namespace MyJira.Controllers
                     var roles = from role in db.Roles select role;
                     foreach (var role in roles)
                     {
-                        UserManager.RemoveFromRole(id, role.Name);
+                        userManager.RemoveFromRole(id, role.Name);
                     }
 
                     var selectedRole = db.Roles.Find(HttpContext.Request.Params.Get("newRole"));
-                    UserManager.AddToRole(id, selectedRole.Name);
+                    userManager.AddToRole(id, selectedRole.Name);
                     db.SaveChanges();
 
                     TempData["message"] = "Dev has been edited successfully";
@@ -98,11 +100,11 @@ namespace MyJira.Controllers
         [HttpDelete]
         public ActionResult Delete(string id)
         {
-            ApplicationDbContext context = new ApplicationDbContext();
-            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            var user = UserManager.Users.FirstOrDefault(u => u.Id == id);
+            var context = new ApplicationDbContext();
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            var user = userManager.Users.FirstOrDefault(u => u.Id == id);
 
-            UserManager.Delete(user);
+            userManager.Delete(user);
             db.SaveChanges();
 
             TempData["message"] = "Dev has been removed succesfully";
@@ -123,8 +125,8 @@ namespace MyJira.Controllers
                 }
                 selectList.Add(new SelectListItem
                 {
-                    Value = role.Id.ToString(),
-                    Text = role.Name.ToString()
+                    Value = role.Id,
+                    Text = role.Name
                 });
             }
             return selectList;
@@ -139,13 +141,11 @@ namespace MyJira.Controllers
             {
                 selectList.Add(new SelectListItem
                 {
-                    Value = team.TeamId.ToString(),
-                    Text = team.TeamName.ToString()
+                    Value = team.Id.ToString(),
+                    Text = team.Name.ToString()
                 });
             }
             return selectList;
         }
-
-
     }
 }

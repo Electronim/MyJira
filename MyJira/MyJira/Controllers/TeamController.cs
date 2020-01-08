@@ -13,8 +13,8 @@ namespace MyJira.Controllers
         // GET: Category
         public ActionResult Index()
         {
-            var teams = from team in db.Teams
-                             orderby team.TeamName
+            var teams = from team in db.Teams.Include("Project")
+                             orderby team.Name
                              select team;
             ViewBag.Teams = teams;
             if (TempData.ContainsKey("message"))
@@ -31,9 +31,13 @@ namespace MyJira.Controllers
             return View(team);
         }
 
-        public ActionResult New()
+        public ActionResult New(int id)
         {
-            Team team = new Team();
+            var team = new Team
+            {
+                ProjectId = id
+            };
+
             return View(team);
         }
 
@@ -49,10 +53,10 @@ namespace MyJira.Controllers
                     TempData["message"] = "Team has been added successfully!";
                     return RedirectToAction("Index");
                 }
-                else
-                    return View(team);
+                
+                return View(team);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return View(team);
             }
@@ -60,7 +64,7 @@ namespace MyJira.Controllers
 
         public ActionResult Edit(int id)
         {
-            Team team = db.Teams.Find(id);
+            var team = db.Teams.Find(id);
             return View(team);
         }
 
@@ -71,19 +75,20 @@ namespace MyJira.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Team team = db.Teams.Find(id);
+                    var team = db.Teams.Find(id);
                     if (TryUpdateModel(team))
                     {
-                        team.TeamName = requestTeam.TeamName;
+                        team.Name = requestTeam.Name;
                         db.SaveChanges();
                         TempData["message"] = "Team has been modified successfully!";
                     }
+
                     return RedirectToAction("Index");
                 }
                 else
                     return View(requestTeam);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return View(requestTeam);
             }
@@ -92,7 +97,7 @@ namespace MyJira.Controllers
         [HttpDelete]
         public ActionResult Delete(int id)
         {
-            Team team = db.Teams.Find(id);
+            var team = db.Teams.Find(id);
             db.Teams.Remove(team);
             db.SaveChanges();
             TempData["message"] = "Team has been deleted successfully!";

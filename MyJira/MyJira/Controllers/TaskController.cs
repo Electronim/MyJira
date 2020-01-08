@@ -27,15 +27,17 @@ namespace MyJira.Controllers
 
         public ActionResult Show(int id)
         {
-            Task task = db.Tasks.Find(id);
+            var task = db.Tasks.Find(id);
             return View(task);
         }
 
-        public ActionResult New(int id)
+        // TODO: fix -> it adds the project to be default
+        public ActionResult New()
         {
-            Task task = new Task();
-            task.ProjectId = id;
-            task.ReporterId = User.Identity.GetUserId();
+            var task = new Task
+            {
+                ReporterId = User.Identity.GetUserId()
+            };
             return View(task);
         }
 
@@ -57,7 +59,7 @@ namespace MyJira.Controllers
                     return View(task);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return View(task);
             }
@@ -65,7 +67,7 @@ namespace MyJira.Controllers
 
         public ActionResult Edit(int id)
         {
-            Task task = db.Tasks.Find(id);
+            var task = db.Tasks.Find(id);
             ViewBag.allDevs = GetAllDevs();
             ViewBag.allStatuses = GetAllStatuses();
             return View(task);
@@ -80,7 +82,7 @@ namespace MyJira.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Task task = db.Tasks.Find(id);
+                    var task = db.Tasks.Find(id);
                     if (TryUpdateModel(task))
                     {
                         task.Title = newTask.Title;
@@ -101,7 +103,7 @@ namespace MyJira.Controllers
                     return View(newTask);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return View(newTask);
             }
@@ -110,7 +112,7 @@ namespace MyJira.Controllers
         [HttpDelete]
         public ActionResult Delete(int id)
         {
-            Task task = db.Tasks.Find(id);
+            var task = db.Tasks.Find(id);
             db.Tasks.Remove(task);
             db.SaveChanges();
             TempData["message"] = "Task has been deleted successfully";
@@ -120,27 +122,18 @@ namespace MyJira.Controllers
         [NonAction]
         public IEnumerable<SelectListItem> GetAllDevs()
         {
-            var selectList = new List<SelectListItem>();
             var devs = from user in db.Users
                        orderby user.UserName
                        select user;
 
-            foreach (var dev in devs)
-            {
-                selectList.Add(new SelectListItem
-                {
-                    Value = dev.Id.ToString(),
-                    Text = dev.UserName.ToString()
-                });
-            }
-            return selectList;
+            return devs.Select(dev => new SelectListItem {Value = dev.Id.ToString(), Text = dev.UserName.ToString()}).ToList();
         }
 
         [NonAction]
         public IEnumerable<SelectListItem> GetAllStatuses()
         {
             var selectList = new List<SelectListItem>();
-            foreach (TaskStatus taskStatus in (TaskStatus[])Enum.GetValues(typeof(TaskStatus)))
+            foreach (var taskStatus in (TaskStatus[])Enum.GetValues(typeof(TaskStatus)))
             {
                 selectList.Add(new SelectListItem
                 {

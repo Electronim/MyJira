@@ -7,9 +7,12 @@
 <h1>@ViewBag.Title</h1>
 
 <div class="panel panel-default">
-    <div class="panel-heading">@Model.TeamName</div>
+    <div class="panel-heading">@Model.Name</div>
 
     <div class="panel-body">
+        part of the project named <i>@Model.Project.Name</i>
+
+        <br />
         @foreach (var user in Model.Devs)
         {
             <strong>@user.UserName</strong>
@@ -17,9 +20,11 @@
         }
     </div>
 
+    <a class="btn btn-outline-info" href="/Task/New/@Model.Id">Create Task</a>
+
     <div class="panel-footer">
-        <a class="btn btn-sm btn-success" href="/Team/Edit/@Model.TeamId">Edit</a>
-        @using (Html.BeginForm(actionName: "Delete", controllerName: "Team", method: FormMethod.Post, routeValues: new { id = Model.TeamId }, htmlAttributes: new { style = "display: inline" }))
+        <a class="btn btn-sm btn-success" href="/Team/Edit/@Model.Id">Edit</a>
+        @using (Html.BeginForm(actionName: "Delete", controllerName: "Team", method: FormMethod.Post, routeValues: new { id = Model.Id }, htmlAttributes: new { style = "display: inline" }))
         {
             @Html.HttpMethodOverride(HttpVerbs.Delete)
             <button class="btn btn-sm btn-success" type="submit">Delete</button>
