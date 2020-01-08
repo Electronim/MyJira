@@ -14,10 +14,12 @@
 @foreach (MyJira.Models.Team team in ViewBag.Teams)
 {
     <div class="panel panel-default">
-        <div class="panel-heading">@team.TeamName</div>
+        <div class="panel-heading">@team.Name</div>
+        
+        <div class="panel-body">part of the project name <i>@team.Project.Name</i></div>
 
         <div class="panel-footer">
-            <a class="btn btn-sm btn-success" href="/Team/Show/@team.TeamId">View more</a>
+            <a class="btn btn-sm btn-success" href="/Team/Show/@team.Id">View more</a>
         </div>
     </div>
 
@@ -25,5 +27,4 @@
 }
 
 <br />
-<a class="btn btn-success" href="/Team/New">Add Team</a>
 <br />

@@ -10,11 +10,13 @@
 
 @using (Html.BeginForm(actionName: "New", controllerName: "Team"))
 { 
-    @Html.Label("TeamName", "Team name")
+    @Html.Label("Name", "Team name")
     <br />
-    @Html.TextBox("TeamName", null, new { @class = "form-control" })
-    @Html.ValidationMessageFor(m => m.TeamName, null, new { @class = "text-danger" })
+    @Html.TextBox("Name", null, new { @class = "form-control" })
+    @Html.ValidationMessageFor(m => m.Name, null, new { @class = "text-danger" })
     <br />
+
+    @Html.HiddenFor(m => m.ProjectId)
     <br />
 
 <button class="btn btn-sm btn-success" type="submit">Create</button>

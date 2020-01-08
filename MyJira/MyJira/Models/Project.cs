@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -17,12 +18,8 @@ namespace MyJira.Models
         [Required(ErrorMessage = "The description is mandatory")]
         public string Description { get; set; }
 
-        public string UserId { get; set; }
-        public virtual ApplicationUser User { get; set; }
+        public string LeaderId { get; set; }
 
-        public string TeamId { get; set; }
-        public virtual Team Team { get; set; }
-
-        public virtual ICollection<Task> Tasks { get; set; }
+        public virtual ICollection<Team> Teams { get; set; }
     }
 }
