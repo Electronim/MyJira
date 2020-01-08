@@ -10,7 +10,7 @@ namespace MyJira.Controllers
     public class TeamController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        // GET: Category
+        // GET: Team
         public ActionResult Index()
         {
             var teams = from team in db.Teams.Include("Project")
@@ -28,6 +28,15 @@ namespace MyJira.Controllers
         public ActionResult Show(int id)
         {
             var team = db.Teams.Find(id);
+
+            var tasksPerTeam =
+                from t in db.Teams
+                join user in db.Users on t.Id equals user.TeamId
+                join task in db.Tasks on user.Id equals task.ReporterId
+                where t.Id == id
+                select task;
+
+            ViewBag.TasksPerTeam = tasksPerTeam;
             return View(team);
         }
 
@@ -51,7 +60,7 @@ namespace MyJira.Controllers
                     db.Teams.Add(team);
                     db.SaveChanges();
                     TempData["message"] = "Team has been added successfully!";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Show", "Project", new { id = team.ProjectId });
                 }
                 
                 return View(team);
@@ -83,7 +92,7 @@ namespace MyJira.Controllers
                         TempData["message"] = "Team has been modified successfully!";
                     }
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Show", "Project", new { id = team.ProjectId });
                 }
                 else
                     return View(requestTeam);

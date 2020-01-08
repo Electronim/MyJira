@@ -17,7 +17,7 @@ namespace MyJira
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            InitialInsert();
+            // InitialInsert();
             createAdminUserAndApplicationRoles();
         }
 
@@ -35,7 +35,7 @@ namespace MyJira
                 var role = new IdentityRole {Name = "Administrator"};
                 roleManager.Create(role);
 
-                var user = new ApplicationUser {UserName = "admin@admin.com", Email = "admin@admin.com", TeamId = 1};
+                var user = new ApplicationUser {UserName = "admin@admin.com", Email = "admin@admin.com"};
                 var adminCreated = userManager.Create(user, "Administrator1!");
                 if (adminCreated.Succeeded)
                 {
@@ -50,6 +50,7 @@ namespace MyJira
                 role.Name = "Organizer";
                 roleManager.Create(role);
             }
+
             if (!roleManager.RoleExists("Dev"))
             {
                 var role = new IdentityRole();

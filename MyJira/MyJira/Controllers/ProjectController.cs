@@ -38,7 +38,7 @@ namespace MyJira.Controllers
         {
             var project = new Project
             {
-                // LeaderId = User.Identity.GetUserId()
+                LeaderId = User.Identity.GetUserId()
             };
             return View(project);
         }

@@ -13,14 +13,50 @@
         part of the project named <i>@Model.Project.Name</i>
 
         <br />
-        @foreach (var user in Model.Devs)
+        <br />
+        @if (Model.Devs.Count == 0)
         {
-            <strong>@user.UserName</strong>
-            <br />
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    No devs in this team
+                </div>
+                <div class="panel-footer">
+                    <i>Add developer</i>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading"> Devs: </div>
+                <div class="panel-body">
+                    @foreach (var user in Model.Devs)
+                    {
+                        <strong>@user.UserName</strong>
+                        <br />
+                    }
+                </div>
+                <div class="panel-footer">
+                    <i>Add Developer</i>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"> Tasks: </div>
+                <div class="panel-body">
+                    @foreach (MyJira.Models.Task task in ViewBag.TasksPerTeam)
+                    {
+                        <div>
+                            <span class="label label-default">@task.Reporter.Team.Project.Name</span> | @task.Title
+                            <a class="btn btn-sm btn-success" href="/Task/Show/@task.Id">View more</a>
+                        </div>
+                        <br />
+                    }
+                </div>
+            </div>
+            <a class="btn btn-outline-info" href="/Task/New/">Create Task</a>
         }
     </div>
-
-    <a class="btn btn-outline-info" href="/Task/New/@Model.Id">Create Task</a>
 
     <div class="panel-footer">
         <a class="btn btn-sm btn-success" href="/Team/Edit/@Model.Id">Edit</a>

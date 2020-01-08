@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using MyJira.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -134,7 +135,7 @@ namespace MyJira.Controllers
 
         public IEnumerable<SelectListItem> GetAllTeams()
         {
-            var selectList = new List<SelectListItem>();
+            var selectList = new List<SelectListItem> {new SelectListItem {Value = null, Text = null}};
 
             var teams = from team in db.Teams select team;
             foreach (var team in teams)
@@ -145,6 +146,7 @@ namespace MyJira.Controllers
                     Text = team.Name.ToString()
                 });
             }
+
             return selectList;
         }
     }

@@ -31,7 +31,7 @@ namespace MyJira.Models
         public DateTime StartTime { get; set; }
 
         [DataType(DataType.DateTime, ErrorMessage = "Date and Time is required")]
-        public DateTime FinishTime { get; set; }
+        public DateTime? FinishTime { get; set; }
 
         public string AssigneeId { get; set; }
         public virtual ApplicationUser Assignee { get; set; }
