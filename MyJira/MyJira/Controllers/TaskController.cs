@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.Security.Application;
 using MyJira.Models;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,8 @@ namespace MyJira.Controllers
         public ActionResult Show(int id)
         {
             var task = db.Tasks.Find(id);
+            ViewBag.Comments = db.Comments.Where(m => m.TaskId == id).ToList();
+            ViewBag.CurrentUser = User.Identity.GetUserId();
             return View(task);
         }
 
@@ -64,7 +67,7 @@ namespace MyJira.Controllers
                     return View(task);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return View(task);
             }
@@ -155,5 +158,92 @@ namespace MyJira.Controllers
             }
             return selectList;
         }
+
+        public ActionResult AddComment(int id)
+        {
+            var comment = new Comment
+            {
+                TaskId = id,
+                UserId = User.Identity.GetUserId()
+            };
+
+            return View(comment);
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult AddComment(Comment comment)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    comment.Content = Sanitizer.GetSafeHtmlFragment(comment.Content);
+                    db.Comments.Add(comment);
+                    db.SaveChanges();
+                    TempData["message"] = "Comment has been added succesfully!";
+                    return RedirectToAction("Show/" + comment.TaskId);
+                }
+                else
+                {
+                    return View(comment);
+}
+            }
+            catch (Exception e)
+            {
+                return View(comment);
+            }
+        }
+
+        public ActionResult EditComment(int id)
+        {
+            var comment = db.Comments.Find(id);
+            return View(comment);
+        }
+
+        [HttpPut]
+        [ValidateInput(false)]
+        public ActionResult EditComment(int id, Comment newComment)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var comment = db.Comments.Find(id);
+                    if (TryUpdateModel(comment))
+                    {
+                        newComment.Content = Sanitizer.GetSafeHtmlFragment(newComment.Content);
+
+                        comment.Content = newComment.Content;
+                        comment.Date = newComment.Date;
+
+                        db.SaveChanges();
+                        TempData["message"] = "Comment has been modified successfully";
+                    }
+                    return RedirectToAction("Show/" + newComment.TaskId);
+                }
+                else
+                {
+                    return View(newComment);
+                }
+            }
+            catch (Exception)
+            {
+                return View(newComment);
+            }
+        }
+
+
+        [HttpDelete]
+        public ActionResult DeleteComment(int id)
+        {
+            Comment comment = db.Comments.Find(id);
+            db.Comments.Remove(comment);
+            db.SaveChanges();
+            TempData["message"] = "Comment has been deleted successfully!";
+
+            return RedirectToAction("Show/" + comment.TaskId);
+        }
+
     }
 }

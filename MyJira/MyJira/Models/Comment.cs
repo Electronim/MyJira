@@ -11,7 +11,6 @@ namespace MyJira.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "The comment should not be empty")]
         public string Content { get; set; }
 
         [DataType(DataType.DateTime, ErrorMessage = "Date and Time is required")]

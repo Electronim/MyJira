@@ -15,7 +15,7 @@
         <p><i class="glyphicon glyphicon-user"> </i><i> reported by </i><strong> @Model.Reporter.UserName </strong></p>
         @if (Model.AssigneeId == null)
         {
-             <p><strong>Assignee:</strong> None</p>
+            <p><strong>Assignee:</strong> None</p>
         }
         else
         {
@@ -26,6 +26,38 @@
         {
             <p><strong>Finish time:</strong> <i>@Model.FinishTime</i></p>
         }
+
+        @foreach (MyJira.Models.Comment comment in ViewBag.Comments)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading"> <span class="label label-default">@comment.User.UserName</span> - <i>@comment.Date</i></div>
+
+                <div class="panel-body">
+                    @Html.Raw(comment.Content)
+                    <br />
+                </div>
+
+                <div class="panel-footer">
+                    <a class="btn btn-sm btn-success" href="/Task/EditComment/@comment.Id">Edit</a>
+                    @using (Html.BeginForm(actionName: "DeleteComment", controllerName: "Task", method: FormMethod.Post, routeValues: new { id = @comment.Id }, htmlAttributes: new { style = "display: inline" }))
+                    {
+                        @Html.HttpMethodOverride(HttpVerbs.Delete)
+                        <button class="btn btn-sm btn-success" type="submit">Delete</button>
+                    }
+                </div>
+            </div>
+        }
+
+    <form method="post" action="/Task/AddComment/">
+        <textarea class="summernote" name="Content" ></textarea>
+        <br />
+        <input type="hidden" name="Date" value="@DateTime.Now" />
+        <input type="hidden" name="UserId" value="@ViewBag.CurrentUser"/>
+        <input type="hidden" name="TaskId" value="@Model.Id" />
+        <button class="btn btn-sm btn-success" type="submit">Add Comment</button>
+    </form>
+
+
     </div>
 
     <div class="panel panel-footer">
