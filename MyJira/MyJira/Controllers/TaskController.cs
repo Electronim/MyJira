@@ -31,7 +31,7 @@ namespace MyJira.Controllers
             return View(task);
         }
 
-        // TODO: fix -> it adds the project to be default
+        // TODO: has to be possible only if the organizer is trying to add tasks in the curr project
         public ActionResult New()
         {
             var task = new Task
@@ -48,11 +48,16 @@ namespace MyJira.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    task.FinishTime = DateTime.Now; // altfel seteaza by default la o data care iese din range-ul SQL
-                    db.Tasks.Add(task);
+                    var teamId =
+                        (from user in db.Users
+                        where user.Id == task.ReporterId
+                        select user.TeamId).ToArray()[0];
+
+                // task.FinishTime = DateTime.Now; // altfel seteaza by default la o data care iese din range-ul SQL
+                db.Tasks.Add(task);
                     db.SaveChanges();
-                    TempData["message"] = "Task has been created succesfully!";
-                    return RedirectToAction("Index");
+                    TempData["message"] = "Task has been created successfully!";
+                    return RedirectToAction("Show", "Team", new { id = teamId });
                 }
                 else
                 {
@@ -83,11 +88,13 @@ namespace MyJira.Controllers
                 if (ModelState.IsValid)
                 {
                     var task = db.Tasks.Find(id);
+
                     if (TryUpdateModel(task))
                     {
                         task.Title = newTask.Title;
                         task.Description = newTask.Description;
                         task.Status = newTask.Status;
+                        task.ReporterId = newTask.ReporterId;
                         task.AssigneeId = newTask.AssigneeId;
                         if (task.Status == TaskStatus.Done)
                         {
@@ -96,7 +103,12 @@ namespace MyJira.Controllers
                         db.SaveChanges();
                         TempData["message"] = "Task has been modified successfully";
                     }
-                    return RedirectToAction("Index");
+
+                    var teamId =
+                        (from user in db.Users
+                            where user.Id == task.ReporterId
+                            select user.TeamId).ToArray()[0];
+                    return RedirectToAction("Show", "Team", new { id = teamId });
                 }
                 else
                 {

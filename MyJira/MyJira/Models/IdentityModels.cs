@@ -14,8 +14,11 @@ namespace MyJira.Models
     {
         public string PhotoPath { get; set; }
 
-        public int TeamId { get; set; }
+        public int? TeamId { get; set; }
         public virtual Team Team { get; set; }
+
+        // public int? ProjectIdAsLeader { get; set; }
+        // public virtual Project Project { get; set; }
 
         public IEnumerable<SelectListItem> AllRoles { get; set; }
         public IEnumerable<SelectListItem> AllTeams { get; set; }

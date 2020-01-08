@@ -12,10 +12,28 @@
     <div class="panel-body">
         Project description: <strong>@Model.Description</strong>
         <br />
-        @*<i class="glyphicon glyphicon-user"> </i><i> created by </i><strong> @Model.Leader.UserName </strong>*@
-
-        <br />
-        <a class="btn btn-success" href="/Team/New/@Model.Id">Add Team</a>
+        <i class="glyphicon glyphicon-user"> </i><i> created by </i><strong> @Model.Leader.UserName </strong>
+        <br/>
+        <br/>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Teams:
+            </div>
+            <div class="panel-body">
+                @foreach (var team in @Model.Teams)
+                {
+                    <div>
+                        Name:<strong> @team.Name</strong>
+                        <br />
+                        <a class="btn btn-sm btn-success" href="/Team/Show/@team.Id">View more</a>
+                    </div>
+                    <br />
+                }
+            </div>
+            <div class="panel-footer">
+                <a class="btn btn-sm btn-success" href="/Team/New/@Model.Id">Add Team</a>
+            </div>
+        </div>
     </div>
 
     <div class="panel-footer">

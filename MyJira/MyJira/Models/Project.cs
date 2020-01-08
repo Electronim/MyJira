@@ -18,7 +18,9 @@ namespace MyJira.Models
         [Required(ErrorMessage = "The description is mandatory")]
         public string Description { get; set; }
 
+        [ForeignKey("Leader")]
         public string LeaderId { get; set; }
+        public virtual ApplicationUser Leader { get; set; }
 
         public virtual ICollection<Team> Teams { get; set; }
     }
