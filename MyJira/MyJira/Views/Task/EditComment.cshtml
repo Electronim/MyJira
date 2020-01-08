@@ -1,0 +1,31 @@
+﻿@model MyJira.Models.Comment
+
+@{
+    ViewBag.Title = "Edit Comment";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm(actionName: "EditComment", controllerName: "Task"))
+{
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(m => m.Id)
+
+    <div class="form-group">
+        <div>
+            @Html.TextArea("Content", Model.Content, new { @class = "form-control summernote" })
+            @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.TaskId)
+    @Html.HiddenFor(m => m.UserId)
+    @Html.HiddenFor(m => m.Date)
+    <div class="form-group">
+        <div>
+            <button class="btn btn-sm btn-success" type="submit">Submit changes</button>
+        </div>
+    </div>
+}
