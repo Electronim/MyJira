@@ -15,12 +15,9 @@
 {
     <div class="panel panel-default">
         <div class="panel-heading"> 
-            @if (task.Reporter.Team != null)
-            {
-                <span class="label label-default">
-                    @task.Reporter.Team.Project.Name
-                </span>
-            }
+            <span class="label label-default">
+                @ViewBag.projectNames[task.ProjectId]
+            </span>
             | @task.Title</div>
         
         <div class="panel-body">

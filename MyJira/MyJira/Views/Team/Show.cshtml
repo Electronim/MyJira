@@ -75,23 +75,33 @@
                     @foreach (MyJira.Models.Task task in ViewBag.TasksPerTeam)
                     {
                         <div>
-                            <span class="label label-default">@Model.Project.Name</span> | @task.Title
+                            <span class="label label-default">@ViewBag.ProjectName</span> | @task.Title
                             <a class="btn btn-sm btn-success" href="/Task/Show/@task.Id">View more</a>
                         </div>
                         <br />
                     }
                 </div>
+                
+                @if (Model.Id == ViewBag.TeamIdUser || Model.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin)
+                {
+                    <div class="panel-footer">
+                        <a class="btn btn-sm btn-success" href="/Task/New/@Model.Id">Create Task</a>
+                    </div>
+                }
             </div>
-            <a class="btn btn-outline-info" href="/Task/New/@Model.Id">Create Task</a>
+
         }
     </div>
 
-    <div class="panel-footer">
-        <a class="btn btn-sm btn-success" href="/Team/Edit/@Model.Id">Edit</a>
-        @using (Html.BeginForm(actionName: "Delete", controllerName: "Team", method: FormMethod.Post, routeValues: new { id = Model.Id }, htmlAttributes: new { style = "display: inline" }))
-        {
-            @Html.HttpMethodOverride(HttpVerbs.Delete)
-            <button class="btn btn-sm btn-success" type="submit">Delete</button>
-        }
-    </div>
+    @if (ViewBag.showButtons && (Model.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin))
+    {
+        <div class="panel-footer">
+            <a class="btn btn-sm btn-success" href="/Team/Edit/@Model.Id">Edit</a>
+            @using (Html.BeginForm(actionName: "Delete", controllerName: "Team", method: FormMethod.Post, routeValues: new {id = Model.Id}, htmlAttributes: new {style = "display: inline"}))
+            {
+                @Html.HttpMethodOverride(HttpVerbs.Delete)
+                <button class="btn btn-sm btn-success" type="submit">Delete</button>
+            }
+        </div>
+    }
 </div>

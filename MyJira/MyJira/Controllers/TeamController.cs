@@ -9,15 +9,19 @@ using System.Web.Mvc;
 
 namespace MyJira.Controllers
 {
+    [Authorize]
     public class TeamController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
         // GET: Team
+        [Authorize(Roles = "Dev,Organizer,Administrator")]
         public ActionResult Index()
         {
             var teams = from team in db.Teams.Include("Project")
                              orderby team.Name
                              select team;
+
             ViewBag.Teams = teams;
             if (TempData.ContainsKey("message"))
             {
@@ -26,17 +30,33 @@ namespace MyJira.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Dev,Organizer,Administrator")]
         public ActionResult Show(int id)
         {
+            var userId = User.Identity.GetUserId();
             var team = db.Teams.Find(id);
+            var tasksPerTeam =
+                from task in db.Tasks
+                where task.TeamId == id
+                select task;
 
-            var tasksPerTeam = db.Tasks.Where(m => m.TeamId == id).ToList();
-
+            ViewBag.ProjectName = team.Project.Name;
             ViewBag.TasksPerTeam = tasksPerTeam;
             ViewBag.DevsWithoutTeam = GetAllDevsWihoutTeams();
+            ViewBag.showButtons = false;
+
+            if (User.IsInRole("Organizer") || User.IsInRole("Administrator"))
+            {
+                ViewBag.showButtons = true;
+            }
+
+            ViewBag.userIsAdmin = User.IsInRole("Administrator");
+            ViewBag.currentUser = User.Identity.GetUserId();
+            ViewBag.TeamIdUser = db.Users.Find(userId).TeamId;
             return View(team);
         }
 
+        [Authorize(Roles = "Organizer,Administrator")]
         public ActionResult New(int id)
         {
             var team = new Team
@@ -48,6 +68,7 @@ namespace MyJira.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Organizer,Administrator")]
         public ActionResult New(Team team)
         {
             try
@@ -68,6 +89,7 @@ namespace MyJira.Controllers
             }
         }
 
+        [Authorize(Roles = "Organizer,Administrator")]
         public ActionResult Edit(int id)
         {
             var team = db.Teams.Find(id);
@@ -75,6 +97,7 @@ namespace MyJira.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Organizer,Administrator")]
         public ActionResult Edit(int id, Team requestTeam)
         {
             try
@@ -89,10 +112,10 @@ namespace MyJira.Controllers
                         TempData["message"] = "Team has been modified successfully!";
                     }
 
-                    return RedirectToAction("Show", "Project", new { id = team.ProjectId });
+                    return RedirectToAction("Show", "Team", new { id = team.Id });
                 }
-                else
-                    return View(requestTeam);
+                
+                return View(requestTeam);
             }
             catch (Exception)
             {
@@ -101,13 +124,14 @@ namespace MyJira.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "Organizer,Administrator")]
         public ActionResult Delete(int id)
         {
             var team = db.Teams.Find(id);
             db.Teams.Remove(team);
             db.SaveChanges();
             TempData["message"] = "Team has been deleted successfully!";
-            return RedirectToAction("Index");
+            return RedirectToAction("Show", "Project", new {id = team.ProjectId});
         }
 
         [HttpPut]
