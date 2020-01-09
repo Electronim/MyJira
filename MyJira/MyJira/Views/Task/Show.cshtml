@@ -13,9 +13,9 @@
 
 
 <div class="panel panel-default">
-    <div class="panel-heading"> <span class="label label-default">@ViewBag.project.Name</span> | @Model.Title</div>
+    <div class="panel-heading"> <span class="label label-default">@ViewBag.Project.Name</span> | @Model.Title</div>
 
-    <div class="panel panel-body">
+    <div class="panel-body">
         <p><strong>Description:</strong> @Model.Description</p>
         <p><strong>Status:</strong> @Model.Status</p>
         <p><i class="glyphicon glyphicon-user"> </i><i> reported by </i><strong> @Model.Reporter.UserName </strong></p>
@@ -42,36 +42,45 @@
                     @Html.Raw(comment.Content)
                     <br />
                 </div>
+                
+                @if (comment.UserId == ViewBag.currentUser || ViewBag.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin)
+                {
+                    <div class="panel-footer">
+                        <a class="btn btn-sm btn-success" href="/Task/EditComment/@comment.Id">Edit</a>
+                        @using (Html.BeginForm(actionName: "DeleteComment", controllerName: "Task", method: FormMethod.Post, routeValues: new {id = @comment.Id}, htmlAttributes: new {style = "display: inline"}))
+                        {
+                            @Html.HttpMethodOverride(HttpVerbs.Delete)
+                            <button class="btn btn-sm btn-success" type="submit">Delete</button>
+                        }
+                    </div>
+                }
 
-                <div class="panel-footer">
-                    <a class="btn btn-sm btn-success" href="/Task/EditComment/@comment.Id">Edit</a>
-                    @using (Html.BeginForm(actionName: "DeleteComment", controllerName: "Task", method: FormMethod.Post, routeValues: new { id = @comment.Id }, htmlAttributes: new { style = "display: inline" }))
-                    {
-                        @Html.HttpMethodOverride(HttpVerbs.Delete)
-                        <button class="btn btn-sm btn-success" type="submit">Delete</button>
-                    }
-                </div>
             </div>
         }
-
-        <form method="post" action="/Task/AddComment/">
-            <textarea class="summernote" name="Content"></textarea>
-            <br />
-            <input type="hidden" name="Date" value="@DateTime.Now" />
-            <input type="hidden" name="UserId" value="@ViewBag.CurrentUser" />
-            <input type="hidden" name="TaskId" value="@Model.Id" />
-            <button class="btn btn-sm btn-success" type="submit">Add Comment</button>
-        </form>
-
-
-    </div>
-
-    <div class="panel panel-footer">
-        <a class="btn btn-sm btn-success" href="/Task/Edit/@Model.Id">Edit</a>
-        @using (Html.BeginForm(actionName: "Delete", controllerName: "Task", method: FormMethod.Post, routeValues: new { id = @Model.Id }, htmlAttributes: new { style = "display: inline" }))
+        
+        @if(Model.TeamId == ViewBag.TeamIdUser || ViewBag.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin)
         {
-            @Html.HttpMethodOverride(HttpVerbs.Delete)
-            <button class="btn btn-sm btn-success" type="submit">Delete</button>
+            <form method="post" action="/Task/AddComment/">
+                <textarea class="summernote" name="Content"></textarea>
+                <br/>
+                <input type="hidden" name="Date" value="@DateTime.Now"/>
+                <input type="hidden" name="UserId" value="@ViewBag.currentUser"/>
+                <input type="hidden" name="TaskId" value="@Model.Id"/>
+                <button class="btn btn-sm btn-success" type="submit">Add Comment</button>
+            </form>
         }
+
     </div>
+    
+    @if (Model.ReporterId == ViewBag.currentUser || ViewBag.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin)
+    {
+        <div class="panel-footer">
+            <a class="btn btn-sm btn-success" href="/Task/Edit/@Model.Id">Edit</a>
+            @using (Html.BeginForm(actionName: "Delete", controllerName: "Task", method: FormMethod.Post, routeValues: new {id = @Model.Id}, htmlAttributes: new {style = "display: inline"}))
+            {
+                @Html.HttpMethodOverride(HttpVerbs.Delete)
+                <button class="btn btn-sm btn-success" type="submit">Delete</button>
+            }
+        </div>
+    }
 </div>

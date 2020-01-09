@@ -30,18 +30,26 @@
                     <br />
                 }
             </div>
-            <div class="panel-footer">
-                <a class="btn btn-sm btn-success" href="/Team/New/@Model.Id">Add Team</a>
-            </div>
+
+            @if (ViewBag.showButtons && (Model.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin))
+            { 
+                <div class="panel-footer">
+                    <a class="btn btn-sm btn-success" href="/Team/New/@Model.Id">Add Team</a>
+                </div>
+            }
+
         </div>
     </div>
-
-    <div class="panel-footer">
-        <a class="btn btn-sm btn-success" href="/Project/Edit/@Model.Id">Edit</a>
-        @using (Html.BeginForm(actionName: "Delete", controllerName: "Project", method: FormMethod.Post, routeValues: new { id = @Model.Id }, htmlAttributes: new { style = "display: inline" }))
-        {
-            @Html.HttpMethodOverride(HttpVerbs.Delete)
-            <button class="btn btn-sm btn-success" type="submit">Delete</button>
-        }
-    </div>
+    
+    @if (ViewBag.showButtons && (Model.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin))
+    {
+        <div class="panel-footer">
+            <a class="btn btn-sm btn-success" href="/Project/Edit/@Model.Id">Edit</a>
+            @using (Html.BeginForm(actionName: "Delete", controllerName: "Project", method: FormMethod.Post, routeValues: new {id = @Model.Id}, htmlAttributes: new {style = "display: inline"}))
+            {
+                @Html.HttpMethodOverride(HttpVerbs.Delete)
+                <button class="btn btn-sm btn-success" type="submit">Delete</button>
+            }
+        </div>
+    }
 </div>

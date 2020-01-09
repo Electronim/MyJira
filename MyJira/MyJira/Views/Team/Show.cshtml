@@ -14,34 +14,13 @@
 
         <br />
         <br />
-        @if (Model.Devs.Count == 0)
-        {
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    No devs in this team
-                </div>
-                <div class="panel-footer">
-                    @if (ViewBag.DevsWithoutTeam.Count > 1)
-                    {
-                        using (Html.BeginForm("AddDev", "Team", FormMethod.Post, new { enctype = "form-data" }))
-                        {
-                            @Html.HttpMethodOverride(HttpVerbs.Put)
-                            @Html.DropDownList("newDev", new SelectList(ViewBag.DevsWithoutTeam, "Value", "Text"), null, new { @class = "form-control" })
-                            <br />
-                            <input name="teamid" type="hidden" value="@Model.Id" />
-                            <button class="btn btn-sm btn-success" type="submit">Add Dev</button>
-                        }
-                    }
-                    else
-                    {
-                        <p> No Devs Available</p>
-                    }
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="panel panel-default">
+        <div class="panel panel-default">
+            @if (Model.Devs.Count == 0)
+            {
+                <div class="panel-heading"> No devs in this team </div>
+            }
+            else
+            {
                 <div class="panel-heading"> Devs: </div>
                 <div class="panel-body">
                     @foreach (var user in Model.Devs)
@@ -50,6 +29,9 @@
                         <br />
                     }
                 </div>
+            }
+            @if (Model.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin)
+            {
                 <div class="panel-footer">
                     @if (ViewBag.DevsWithoutTeam.Count > 1)
                     {
@@ -64,34 +46,43 @@
                     }
                     else
                     {
-                        <p> No Devs Available</p>
+                        <p> No Devs available to add </p>
                     }
                 </div>
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading"> Tasks: </div>
+            <div class="panel-body">
+                @foreach (MyJira.Models.Task task in ViewBag.TasksPerTeam)
+                {
+                    <div>
+                        <span class="label label-default">@ViewBag.ProjectName</span> | @task.Title
+                        <a class="btn btn-sm btn-success" href="/Task/Show/@task.Id">View more</a>
+                    </div>
+                    <br />
+                }
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading"> Tasks: </div>
-                <div class="panel-body">
-                    @foreach (MyJira.Models.Task task in ViewBag.TasksPerTeam)
-                    {
-                        <div>
-                            <span class="label label-default">@Model.Project.Name</span> | @task.Title
-                            <a class="btn btn-sm btn-success" href="/Task/Show/@task.Id">View more</a>
-                        </div>
-                        <br />
-                    }
+            @if (Model.Id == ViewBag.TeamIdUser || Model.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin)
+            {
+                <div class="panel-footer">
+                    <a class="btn btn-sm btn-success" href="/Task/New/@Model.Id">Create Task</a>
                 </div>
-            </div>
-            <a class="btn btn-outline-info" href="/Task/New/@Model.Id">Create Task</a>
-        }
+            }
+        </div>
     </div>
 
-    <div class="panel-footer">
-        <a class="btn btn-sm btn-success" href="/Team/Edit/@Model.Id">Edit</a>
-        @using (Html.BeginForm(actionName: "Delete", controllerName: "Team", method: FormMethod.Post, routeValues: new { id = Model.Id }, htmlAttributes: new { style = "display: inline" }))
-        {
-            @Html.HttpMethodOverride(HttpVerbs.Delete)
-            <button class="btn btn-sm btn-success" type="submit">Delete</button>
-        }
-    </div>
+    @if (ViewBag.showButtons && (Model.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin))
+    {
+        <div class="panel-footer">
+            <a class="btn btn-sm btn-success" href="/Team/Edit/@Model.Id">Edit</a>
+            @using (Html.BeginForm(actionName: "Delete", controllerName: "Team", method: FormMethod.Post, routeValues: new {id = Model.Id}, htmlAttributes: new {style = "display: inline"}))
+            {
+                @Html.HttpMethodOverride(HttpVerbs.Delete)
+                <button class="btn btn-sm btn-success" type="submit">Delete</button>
+            }
+        </div>
+    }
 </div>

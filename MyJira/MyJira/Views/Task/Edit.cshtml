@@ -18,7 +18,7 @@
     @Html.HiddenFor(m => m.TeamId)
 
     <br />
-    @:<p><strong>Project name: </strong> <span class="label label-default">@Model.Reporter.Team.Project.Name</span></p>
+    @:<p><strong>Project name: </strong> <span class="label label-default">@ViewBag.Project.Name</span></p>
 
 
     @Html.Label("Title", "Title")

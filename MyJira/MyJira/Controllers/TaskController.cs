@@ -2,6 +2,7 @@
 using Microsoft.Security.Application;
 using MyJira.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,13 +15,24 @@ namespace MyJira.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         // GET: Task
-        [Authorize(Roles = "Organizer,Dev,Administrator")]
+        [Authorize(Roles = "Dev,Organizer,Administrator")]
         public ActionResult Index()
         {
             var tasks = from task in db.Tasks
                         orderby task.Title
                         select task;
-            ViewBag.tasks = tasks; 
+
+            var projects = from project in db.Projects
+                select project;
+            
+            var projectNames = new Dictionary<int, string>();
+            foreach (var project in projects)
+            {
+                projectNames.Add(project.Id, project.Name);
+            }
+
+            ViewBag.tasks = tasks;
+            ViewBag.projectNames = projectNames;
             if (TempData.ContainsKey("message"))
             {
                 ViewBag.message = TempData["message"].ToString();
@@ -28,80 +40,36 @@ namespace MyJira.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Organizer,Dev,Administrator")]
+        [Authorize(Roles = "Dev,Organizer,Administrator")]
         public ActionResult Show(int id)
         {
+            var userId = User.Identity.GetUserId();
             var task = db.Tasks.Find(id);
             ViewBag.Comments = db.Comments.Where(m => m.TaskId == id).ToList();
-            ViewBag.CurrentUser = User.Identity.GetUserId();
 
-            var currentUser = db.Users.Find(User.Identity.GetUserId());
+            var project = db.Projects.Find(task.ProjectId);
+            ViewBag.Project = project;
 
-            if (User.IsInRole("Dev") && currentUser.Team == null)
+            ViewBag.showButtons = false;
+
+            if (User.IsInRole("Organizer") || User.IsInRole("Administrator"))
             {
-                TempData["message"] = "You do not have permissions!";
-                return RedirectToAction("Index");
+                ViewBag.showButtons = true;
             }
 
-            int? projUser = null;
-            if (User.IsInRole("Dev"))
-            {
-                projUser = currentUser.Team.ProjectId;
-            }
-
-            if (User.IsInRole("Organizer"))
-            {
-                var result =
-                    (from project in db.Projects
-                     where project.LeaderId == currentUser.Id
-                     select project.Id).ToArray();
-
-                if (result.Length == 1)
-                {
-                    projUser = result[0];
-                }
-            }
-
-            int? projTask = null;
-            if (task.Reporter.Team == null) // he is an organizer
-            {
-                var result =
-                    (from project in db.Projects
-                     where project.LeaderId == task.ReporterId
-                     select project.Id).ToArray();
-
-                if (result.Length == 1)
-                {
-                    projTask = result[0];
-                }
-            } else
-            {
-                projTask = task.Reporter.Team.ProjectId;
-            }
-
-            if (!User.IsInRole("Administrator") && (projUser == null || projTask == null || projUser != projTask))
-            {
-                TempData["message"] = "You do not have permissions!";
-                return RedirectToAction("Index");
-            }
-
-            if (TempData.ContainsKey("message"))
-            {
-                ViewBag.message = TempData["message"].ToString();
-            }
-            var project_of = db.Projects.Find(task.ProjectId);
-            ViewBag.project = project_of;
+            ViewBag.userIsAdmin = User.IsInRole("Administrator");
+            ViewBag.currentUser = userId;
+            ViewBag.TeamIdUser = db.Users.Find(userId).TeamId;
             return View(task);
         }
 
-        // TODO: has to be possible only if the organizer or team dev is trying to add tasks in the curr project
-        [Authorize(Roles = "Organizer,Administrator,Dev")]
+        [Authorize(Roles = "Dev,Organizer,Administrator")]
         public ActionResult New(int id)  // id is actually the team id from where the task is created
         {
             var team = db.Teams.Find(id);
             var currentUserId = User.Identity.GetUserId();
             var currentUser = db.Users.Find(currentUserId);
-            if ((User.IsInRole("Organizer") && team.Project.LeaderId == User.Identity.GetUserId()) || ((User.IsInRole("Dev") && (currentUser.TeamId == team.Id)) || User.IsInRole("Administrator")))
+            if ((User.IsInRole("Organizer") && team.Project.LeaderId == User.Identity.GetUserId()) || (User.IsInRole("Dev") && (currentUser.TeamId == team.Id)) || User.IsInRole("Administrator"))
             {
                 var task = new Task
                 {
@@ -119,7 +87,7 @@ namespace MyJira.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Organizer,Dev,Administrator")]
+        [Authorize(Roles = "Dev,Organizer,Administrator")]
         public ActionResult New(Task task)
         {
             try
@@ -142,17 +110,20 @@ namespace MyJira.Controllers
                 return View(task);
             }
         }
-        [Authorize(Roles = "Organizer,Dev,Administrator")]
+
+        [Authorize(Roles = "Dev,Organizer,Administrator")]
         public ActionResult Edit(int id)
         {
             var task = db.Tasks.Find(id);
+            var project = db.Projects.Find(task.ProjectId);
+            ViewBag.Project = project;
             ViewBag.allDevs = GetAllDevs();
             ViewBag.allStatuses = GetAllStatuses();
             return View(task);
         }
 
         [HttpPut]
-        [Authorize(Roles = "Organizer,Dev,Administrator")]
+        [Authorize(Roles = "Dev,Organizer,Administrator")]
         public ActionResult Edit(int id, Task newTask)
         {
             ViewBag.allDevs = GetAllDevs();
@@ -178,7 +149,7 @@ namespace MyJira.Controllers
                         TempData["message"] = "Task has been modified successfully";
                     }
 
-                    return RedirectToAction("Show", "Team", new { id = task.TeamId });
+                    return RedirectToAction("Show", "Task", new { id = task.Id });
                 }
                 else
                 {
@@ -192,14 +163,15 @@ namespace MyJira.Controllers
         }
 
         [HttpDelete]
-        [Authorize(Roles = "Organizer, Administrator")]
+        [Authorize(Roles = "Dev, Organizer,Administrator")]
         public ActionResult Delete(int id)
         {
             var task = db.Tasks.Find(id);
+            var teamId = task.TeamId;
             db.Tasks.Remove(task);
             db.SaveChanges();
             TempData["message"] = "Task has been deleted successfully";
-            return RedirectToAction("Index");
+            return RedirectToAction("Show", "Team", new {id = teamId});
         }
 
         [NonAction]

@@ -36,6 +36,15 @@ namespace MyJira.Controllers
         public ActionResult Show(int id)
         {
             var project = db.Projects.Find(id);
+            ViewBag.showButtons = false;
+
+            if (User.IsInRole("Organizer") || User.IsInRole("Administrator"))
+            {
+                ViewBag.showButtons = true;
+            }
+
+            ViewBag.userIsAdmin = User.IsInRole("Administrator");
+            ViewBag.currentUser = User.Identity.GetUserId();
 
             return View(project);
         }
@@ -106,16 +115,15 @@ namespace MyJira.Controllers
             }
         }
 
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Organizer,Administrator")]
         public ActionResult Edit(int id)
         {
             var project = db.Projects.Find(id);
-
             return View(project);
         }
 
         [HttpPut]
-        [Authorize(Roles = "Organizer")]
+        [Authorize(Roles = "Organizer,Administrator")]
         public ActionResult Edit(int id, Project requestProject)
         {
             try
@@ -126,16 +134,14 @@ namespace MyJira.Controllers
 
                     if (TryUpdateModel(project))
                     {
-                        var oldName = project.Name;
-
                         project.Name = requestProject.Name;
                         project.Description = requestProject.Description;
 
                         db.SaveChanges();
-                        TempData["message"] = "The project " + oldName + " has been modified!";
+                        TempData["message"] = "The project has been modified!";
                     }
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Show", "Project", new {id = project.Id});
                 }
 
                 return View(requestProject);
