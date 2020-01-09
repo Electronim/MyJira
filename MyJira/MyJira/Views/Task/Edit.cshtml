@@ -13,9 +13,13 @@
 
     @Html.HiddenFor(m => m.Id)
     @Html.HiddenFor(m => m.ReporterId)
-   
+    @Html.HiddenFor(m => m.StartTime)
+    @Html.HiddenFor(m => m.ProjectId)
+    @Html.HiddenFor(m => m.TeamId)
+
     <br />
     @:<p><strong>Project name: </strong> <span class="label label-default">@Model.Reporter.Team.Project.Name</span></p>
+
 
     @Html.Label("Title", "Title")
     <br />
@@ -34,8 +38,6 @@
     <i class="glyphicon glyphicon-th-list"></i> <label>Status</label>
     @Html.DropDownListFor(m => m.Status, new SelectList(ViewBag.allStatuses, "Value", "Text"), null, new { @class = "form-control" })
     <br />
-
-    @Html.HiddenFor(m => m.StartTime)
 
     <i class="glyphicon glyphicon-th-list"></i> <label>Assignee</label>
     @Html.DropDownListFor(m => m.AssigneeId, new SelectList(ViewBag.allDevs, "Value", "Text"), "None", new { @class = "form-control" })

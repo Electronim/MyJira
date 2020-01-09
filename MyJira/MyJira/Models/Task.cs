@@ -41,5 +41,9 @@ namespace MyJira.Models
         public virtual ApplicationUser Reporter { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
+
+        public int TeamId { set; get; }
+
+        public int ProjectId { set; get; }
     }
 }
