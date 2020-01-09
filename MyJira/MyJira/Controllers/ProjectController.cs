@@ -43,9 +43,6 @@ namespace MyJira.Controllers
         [Authorize(Roles="Dev,Administrator")]
         public ActionResult New()
         {
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-            var roles = (from role in db.Roles select role).ToArray();
-
             if (User.IsInRole("Dev"))
             {
                 var userId = User.Identity.GetUserId();
@@ -59,14 +56,6 @@ namespace MyJira.Controllers
                     TempData["message"] = "You cannot create a project (you are assigned to a team)";
                     return RedirectToAction("Index");
                 }
-
-                foreach (var role in roles)
-                {
-                    userManager.RemoveFromRole(userId, role.Name);
-                }
-
-                userManager.AddToRole(userId, "Organizer");
-                db.SaveChanges();
             }
 
             var project = new Project
@@ -90,6 +79,18 @@ namespace MyJira.Controllers
 
                     if (User.IsInRole("Dev"))
                     {
+                        var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+                        var roles = (from role in db.Roles select role).ToArray();
+                        var userId = User.Identity.GetUserId();
+
+                        foreach (var role in roles)
+                        {
+                            userManager.RemoveFromRole(userId, role.Name);
+                        }
+
+                        userManager.AddToRole(userId, "Organizer");
+                        db.SaveChanges();
+
                         var authenticationManager = HttpContext.GetOwinContext().Authentication;
                         authenticationManager.SignOut("ApplicationCookie");
                     }
