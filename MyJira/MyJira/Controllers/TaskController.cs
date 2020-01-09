@@ -101,7 +101,7 @@ namespace MyJira.Controllers
             var team = db.Teams.Find(id);
             var currentUserId = User.Identity.GetUserId();
             var currentUser = db.Users.Find(currentUserId);
-            if (User.IsInRole("Organizer") && (team.Project.LeaderId == User.Identity.GetUserId() || User.IsInRole("Dev")) && (currentUser.TeamId == team.Id || User.IsInRole("Administrator")))
+            if ((User.IsInRole("Organizer") && team.Project.LeaderId == User.Identity.GetUserId()) || ((User.IsInRole("Dev") && (currentUser.TeamId == team.Id)) || User.IsInRole("Administrator")))
             {
                 var task = new Task
                 {
