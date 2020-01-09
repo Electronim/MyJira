@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin.Security;
 using MyJira.Models;
 
 namespace MyJira.Controllers
 {
+    [Authorize]
     public class ProjectController : Controller
     {
         private ApplicationDbContext db = ApplicationDbContext.Create();
 
         // GET: Project
+        [Authorize(Roles = "Dev,Organizer,Administrator")]
         public ActionResult Index()
         {
             var projects = db.Projects;
@@ -27,6 +32,7 @@ namespace MyJira.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Dev,Organizer,Administrator")]
         public ActionResult Show(int id)
         {
             var project = db.Projects.Find(id);
@@ -34,8 +40,35 @@ namespace MyJira.Controllers
             return View(project);
         }
 
+        [Authorize(Roles="Dev,Administrator")]
         public ActionResult New()
         {
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var roles = (from role in db.Roles select role).ToArray();
+
+            if (User.IsInRole("Dev"))
+            {
+                var userId = User.Identity.GetUserId();
+                var teamId =
+                    (from user in db.Users
+                    where user.Id == userId
+                    select user.TeamId).ToArray().FirstOrDefault();
+
+                if (teamId != null)
+                {
+                    TempData["message"] = "You cannot create a project (you are assigned to a team)";
+                    return RedirectToAction("Index");
+                }
+
+                foreach (var role in roles)
+                {
+                    userManager.RemoveFromRole(userId, role.Name);
+                }
+
+                userManager.AddToRole(userId, "Organizer");
+                db.SaveChanges();
+            }
+
             var project = new Project
             {
                 LeaderId = User.Identity.GetUserId()
@@ -44,6 +77,7 @@ namespace MyJira.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Dev,Administrator")]
         public ActionResult New(Project project)
         {
             try
@@ -53,16 +87,25 @@ namespace MyJira.Controllers
                     db.Projects.Add(project);
                     db.SaveChanges();
                     TempData["message"] = "The project has been added!";
+
+                    if (User.IsInRole("Dev"))
+                    {
+                        var authenticationManager = HttpContext.GetOwinContext().Authentication;
+                        authenticationManager.SignOut("ApplicationCookie");
+                    }
+
                     return RedirectToAction("Index");
                 }
 
                 return View(project);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return View(project);
             }
         }
+
+        [Authorize(Roles = "Organizer")]
         public ActionResult Edit(int id)
         {
             var project = db.Projects.Find(id);
@@ -71,6 +114,7 @@ namespace MyJira.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Organizer")]
         public ActionResult Edit(int id, Project requestProject)
         {
             try
@@ -102,6 +146,7 @@ namespace MyJira.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "Organizer,Administrator")]
         public ActionResult Delete(int id)
         {
             var project = db.Projects.Find(id);
