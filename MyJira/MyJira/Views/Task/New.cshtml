@@ -28,6 +28,8 @@
     @Html.ValidationMessageFor(m => m.StartTime, null, new { @class = "text-danger" })
 
     @Html.HiddenFor(m => m.ReporterId)
+    @Html.HiddenFor(m => m.ProjectId)
+    @Html.HiddenFor(m => m.TeamId)
 
     <button class="btn btn-sm btn-success" type="submit">Create</button>
 }

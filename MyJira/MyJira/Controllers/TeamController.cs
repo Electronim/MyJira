@@ -1,4 +1,6 @@
-﻿using MyJira.Models;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using MyJira.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -112,5 +114,21 @@ namespace MyJira.Controllers
             TempData["message"] = "Team has been deleted successfully!";
             return RedirectToAction("Index");
         }
+
+        //[NonAction]
+        //public IEnumerable<SelectListItem> GetAllDevsWihout()
+        //{
+        //    var context = new ApplicationDbContext();
+        //    var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+        //    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+
+        //    var devs = from user in db.Users
+        //               orderby user.UserName
+        //               select user;
+
+
+
+        //    return devs.Select(dev => new SelectListItem { Value = dev.Id.ToString(), Text = dev.UserName.ToString() }).ToList();
+        //}
     }
 }
