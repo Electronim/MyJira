@@ -21,7 +21,21 @@
                     No devs in this team
                 </div>
                 <div class="panel-footer">
-                    <i>Add developer</i>
+                    @if (ViewBag.DevsWithoutTeam.Count > 1)
+                    {
+                        using (Html.BeginForm("AddDev", "Team", FormMethod.Post, new { enctype = "form-data" }))
+                        {
+                            @Html.HttpMethodOverride(HttpVerbs.Put)
+                            @Html.DropDownList("newDev", new SelectList(ViewBag.DevsWithoutTeam, "Value", "Text"), null, new { @class = "form-control" })
+                            <br />
+                            <input name="teamid" type="hidden" value="@Model.Id" />
+                            <button class="btn btn-sm btn-success" type="submit">Add Dev</button>
+                        }
+                    }
+                    else
+                    {
+                        <p> No Devs Available</p>
+                    }
                 </div>
             </div>
         }
@@ -37,7 +51,21 @@
                     }
                 </div>
                 <div class="panel-footer">
-                    <i>Add Developer</i>
+                    @if (ViewBag.DevsWithoutTeam.Count > 1)
+                    {
+                        using (Html.BeginForm("AddDev", "Team", FormMethod.Post, new { enctype = "form-data" }))
+                        {
+                            @Html.HttpMethodOverride(HttpVerbs.Put)
+                            @Html.DropDownList("newDev", new SelectList(ViewBag.DevsWithoutTeam, "Value", "Text"), null, new { @class = "form-control" })
+                            <br />
+                            <input name="teamid" type="hidden" value="@Model.Id" />
+                            <button class="btn btn-sm btn-success" type="submit">Add Dev</button>
+                        }
+                    }
+                    else
+                    {
+                        <p> No Devs Available</p>
+                    }
                 </div>
             </div>
 
@@ -47,7 +75,7 @@
                     @foreach (MyJira.Models.Task task in ViewBag.TasksPerTeam)
                     {
                         <div>
-                            <span class="label label-default">@task.Reporter.Team.Project.Name</span> | @task.Title
+                            <span class="label label-default">@Model.Project.Name</span> | @task.Title
                             <a class="btn btn-sm btn-success" href="/Task/Show/@task.Id">View more</a>
                         </div>
                         <br />
