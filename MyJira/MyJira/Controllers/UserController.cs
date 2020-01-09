@@ -120,10 +120,10 @@ namespace MyJira.Controllers
             var roles = from role in db.Roles select role;
             foreach (var role in roles)
             {
-                if (role.Name.Equals("Organizer"))
-                {
-                    continue;
-                }
+                //if (role.Name.Equals("Organizer"))
+                //{
+                //    continue;
+                //}
                 selectList.Add(new SelectListItem
                 {
                     Value = role.Id,

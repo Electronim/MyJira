@@ -118,7 +118,6 @@ namespace MyJira.Controllers
             }
         }
 
-        // TODO: de corectat la redirectToAction
         [HttpPost]
         [Authorize(Roles = "Organizer,Dev,Administrator")]
         public ActionResult New(Task task)
@@ -127,7 +126,6 @@ namespace MyJira.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // task.FinishTime = DateTime.Now; // altfel seteaza by default la o data care iese din range-ul SQL
                     db.Tasks.Add(task);
                     db.SaveChanges();
                     TempData["message"] = "Task has been created successfully!";
@@ -180,11 +178,7 @@ namespace MyJira.Controllers
                         TempData["message"] = "Task has been modified successfully";
                     }
 
-                    var teamId =
-                        (from user in db.Users
-                         where user.Id == task.ReporterId
-                         select user.TeamId).ToArray()[0];
-                    return RedirectToAction("Show", "Team", new { id = teamId });
+                    return RedirectToAction("Show", "Team", new { id = task.TeamId });
                 }
                 else
                 {
