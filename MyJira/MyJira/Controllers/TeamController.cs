@@ -23,7 +23,6 @@ namespace MyJira.Controllers
             {
                 ViewBag.message = TempData["message"].ToString();
             }
-
             return View();
         }
 
@@ -31,14 +30,10 @@ namespace MyJira.Controllers
         {
             var team = db.Teams.Find(id);
 
-            var tasksPerTeam =
-                from t in db.Teams
-                join user in db.Users on t.Id equals user.TeamId
-                join task in db.Tasks on user.Id equals task.ReporterId
-                where t.Id == id
-                select task;
+            var tasksPerTeam = db.Tasks.Where(m => m.TeamId == id).ToList();
 
             ViewBag.TasksPerTeam = tasksPerTeam;
+            ViewBag.DevsWithoutTeam = GetAllDevsWihoutTeams();
             return View(team);
         }
 
@@ -115,20 +110,56 @@ namespace MyJira.Controllers
             return RedirectToAction("Index");
         }
 
-        //[NonAction]
-        //public IEnumerable<SelectListItem> GetAllDevsWihout()
-        //{
-        //    var context = new ApplicationDbContext();
-        //    var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-        //    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+        [HttpPut]
+        public ActionResult AddDev(int teamId)
+        {
+            string devId = HttpContext.Request.Params.Get("newDev");
+            if (devId != null)
+            {
+                try
+                {
+                    var selectedDev = db.Users.Find(devId);
+                    if (ModelState.IsValid)
+                    {
+                        if (TryUpdateModel(selectedDev))
+                        {
+                            selectedDev.TeamId = teamId;
+                            db.SaveChanges();
+                            TempData["message"] = "Dev has been added to the team";
+                            return RedirectToAction("Show/" + teamId);
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("Show/" + teamId);
+                    }
+                }
+                catch (Exception e)
+                {
+                    return RedirectToAction("Show/" + teamId);
+                }
+            }
+            return RedirectToAction("Show/" + teamId);
+        }
 
-        //    var devs = from user in db.Users
-        //               orderby user.UserName
-        //               select user;
+        [NonAction]
+        public IEnumerable<SelectListItem> GetAllDevsWihoutTeams()
+        {
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
 
+            var devs = db.Users.Where(m => m.TeamId == null).OrderBy(m => m.UserName).ToList();
+            var devsWithoutTeam = db.Users.Where(m => m.TeamId == null).OrderBy(m => m.UserName).ToList();
 
-
-        //    return devs.Select(dev => new SelectListItem { Value = dev.Id.ToString(), Text = dev.UserName.ToString() }).ToList();
-        //}
+            foreach (var dev in devs)
+            {
+                if (userManager.IsInRole(dev.Id, "Administrator") || userManager.IsInRole(dev.Id, "Organizer"))
+                {
+                    devsWithoutTeam.Remove(dev);
+                }
+            }
+            var finalDevs =  devsWithoutTeam.Select(dev => new SelectListItem { Value = dev.Id.ToString(), Text = dev.UserName.ToString() }).ToList();
+            finalDevs.Insert(0, null);
+            return finalDevs;
+        }
     }
 }
