@@ -1,26 +1,38 @@
 ﻿<div id="myjira">
-    <div class="row" id="project-main">
-        @if (TempData.ContainsKey("message"))
+    <div class="row" id="main">
+        @*@if (TempData.ContainsKey("message"))
         {
             <h3 class="alert alert-info" role="alert">@ViewBag.message</h3>
-        }
+        }*@
+
+        <div style="text-align: center">
+            <p style="font-size: 70px; font-family:cursive">Projects</p>
+        </div>
 
         <a class="btn btn-sm fixed-button" href="/Project/New"><span class="glyphicon glyphicon-plus-sign"></span></a>
-        <div class="container-items">
+        <div class="proj-container-items">
             @foreach (MyJira.Models.Project project in ViewBag.Projects)
             {
                 <div class="col-lg-4">
                     <div class="panel panel-default">
-                        <div class="panel-heading">@project.Name</div>
+                        <div class="panel-heading" style="text-align:center"><strong style="font-size: 22px">@project.Name</strong></div>
 
-                        <div class="panel-body">
-                            <strong>Project description:</strong> @project.Description
+                        <div class="panel-body" style="position: relative">
+
+                            <p style="line-height: 20px; height: 40px; overflow: hidden;">
+                                <strong>Project description:</strong> @project.Description
+                            </p>
+
+                            
                             <br />
-                            <i class="glyphicon glyphicon-user"> </i><i> created by </i><strong> @project.Leader.UserName </strong>
+                            <br />
+                            <div style="position: absolute; padding-top: 7px; right: 1%; bottom: 1%;">
+                                <i class="glyphicon glyphicon-user"> </i><i> created by </i><strong> @project.Leader.UserName </strong>
+                            </div>
                         </div>
 
-                        <div class="panel-footer">
-                            <a class="btn btn-sm button-crud" href="/Project/Show/@project.Id"><span class="glyphicon glyphicon-eye-open"></span><p style="display: inline; font-size: 25px;"> View more</p></a>
+                        <div class="panel-footer" id="view-proj-item">
+                            <a class="btn btn-sm view-proj-button" href="/Project/Show/@project.Id"><span class="glyphicon glyphicon-eye-open"></span></a>
                         </div>
                     </div>
                 </div>

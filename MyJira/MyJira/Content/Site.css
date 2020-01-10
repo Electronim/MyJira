@@ -33,17 +33,33 @@
     margin-top: 13%;
 }
 
-#project-main {
+#main {
     padding: 20px;
-    overflow-y: auto;
     height: 100%;
 }
 
-.container-items {
+.proj-container-items {
     margin: auto;
-    margin-top: 5%;
+    margin-top: 2%;
     width: 75%;
     height: 75%;
+    overflow-y: auto;
+    border-radius: 3px 4px;
+}
+
+.proj-desc {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    height: 20%;
+    overflow-y: auto;
+}
+
+.teams-container-items {
+    margin: auto;
+    margin-top: 2%;
+    width: 75%;
+    height: 40%;
     overflow-y: auto;
     border-radius: 3px 4px;
 }
@@ -61,20 +77,64 @@
     font-size: 40px;
 }
 
-.button-crud {
+.add-team-button {
     color: #526760;
-    margin: auto;
+    border: 5px solid red;
 }
 
-.button-crud > span {
-    font-size: 20px;
+.add-team-button > span {
+    font-size: 180%;
 }
 
+.delete_proj_button {
+    color: #526760;
+    border: 0px;
+    background-color: transparent;
+    position: fixed;
+    right: 1%;
+}
+
+.delete_proj_button > span {
+    font-size: 250%;
+}
+
+.edit-proj-button {
+    color: #526760;
+    position: fixed;
+    top: 13%;
+    right: 4%;
+}
+
+.edit-proj-button > span{
+    font-size: 250%;
+}
+
+.view-proj-button {
+    color: #526760;
+    display: inline-block;
+}
+
+.view-proj-button > span {
+    font-size: 200%;
+}
 
 ::-webkit-scrollbar {
     display: none;
 }
 
+#show-team-item {
+    background-color: #8B8BAE;
+    border-radius: 4px 4px;
+    text-align: center;
+}
+
+#show-team-button {
+    display: inline-block;
+}
+
+#view-proj-item {
+    text-align: center;
+}
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
