@@ -212,6 +212,14 @@
 #view-proj-item {
     text-align: center;
 }
+
+#task-show-container {
+    position: absolute;
+    width: 100%;
+    padding: 2%;
+}
+
+
 #add-form {
     margin-left: 37%;
     margin-top: 7%;
