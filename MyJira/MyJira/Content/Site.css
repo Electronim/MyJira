@@ -64,6 +64,74 @@
     border-radius: 3px 4px;
 }
 
+#tasks-container {
+    margin-top: 2%;
+    width: 75%;
+    height: 65%;
+    position: absolute;
+}
+
+#task-todo-container {
+    margin-left: 10%;
+    width: 25%;
+    height: 100%;
+    overflow-y: auto;
+    border: 1px dashed red;
+    border-radius: 15px 15px;
+}
+
+#task-in-progress-container {
+    width: 25%;
+    height: 100%;
+    overflow-y: auto;
+    margin-left: 1%;
+    border: 1px dashed orange;
+    border-radius: 15px 15px;
+}
+
+#task-done-container {
+    width: 25%;
+    height: 100%;
+    overflow-y: auto;
+    margin-left: 1%;
+    border: 1px dashed forestgreen;
+    border-radius: 15px 15px;
+}
+
+#devs-container {
+    width: 15%;
+    height: 40%;
+    overflow-y: auto;
+    margin-top: 3%;
+    margin-left: 75%;
+    border: 1px dashed black;
+    border-radius: 10px 10px;
+    position: absolute;
+}
+
+#devs-add-container {
+    width: 15%;
+    height: 20%;
+    overflow-y: auto;
+    margin-top: 23%;
+    margin-left: 75%;
+    border: 1px dashed black;
+    border-radius: 10px 10px;
+    position: absolute;
+}
+
+.dev-item {
+    width: 100%;
+    color: black;
+}
+
+.task-item {
+    background-color: lightgrey;
+    width: 100%;
+    margin-top: -7%;
+    color: black;
+}
+
 .fixed-button {
     color: #526760;
     position: fixed;
@@ -79,14 +147,23 @@
 
 .add-team-button {
     color: #526760;
-    border: 5px solid red;
 }
 
 .add-team-button > span {
     font-size: 180%;
 }
 
-.delete_proj_button {
+.add-task-button {
+    color: #526760;
+    width: 100%;
+    margin-top: -10%;
+}
+
+.add-task-button > span {
+    font-size: 170%;
+}
+
+.delete_button {
     color: #526760;
     border: 0px;
     background-color: transparent;
@@ -94,18 +171,18 @@
     right: 1%;
 }
 
-.delete_proj_button > span {
+.delete_button > span {
     font-size: 250%;
 }
 
-.edit-proj-button {
+.edit-button {
     color: #526760;
     position: fixed;
     top: 13%;
     right: 4%;
 }
 
-.edit-proj-button > span{
+.edit-button > span{
     font-size: 250%;
 }
 
