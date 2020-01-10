@@ -1,23 +1,21 @@
 ﻿@model MyJira.Models.Team
 
-@{
-    ViewBag.Title = "Team Edit";
-}
+<div id="myjira">
+    <div class="row" id="add-form">
+        @using (Html.BeginForm(actionName: "Edit", controllerName: "Team"))
+        {
+            @Html.HttpMethodOverride(HttpVerbs.Put)
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-<h2>@ViewBag.Title</h2>
+            @Html.HiddenFor(m => m.Id)
+            <br />
+            @Html.Label("Name", "Team Name")
+            <br />
+            @Html.EditorFor(m => m.Name)
+            @Html.ValidationMessageFor(m => m.Name, null, new { @class = "text-danger" })
+            <br /> <br />
 
-@using (Html.BeginForm(actionName: "Edit", controllerName: "Team"))
-{
-    @Html.HttpMethodOverride(HttpVerbs.Put)
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-
-    @Html.HiddenFor(m => m.Id)
-    <br />
-    @Html.Label("Name", "Team Name")
-    <br />
-    @Html.EditorFor(m => m.Name)
-    @Html.ValidationMessageFor(m => m.Name, null, new { @class = "text-danger" })
-    <br /> <br />
-
-    <button class="btn btn-sm btn-success" type="submit">Submit changes</button>
-}
+            <button class="btn btn-sm btn-success add-button" type="submit">Submit changes</button>
+        }
+    </div>
+</div>

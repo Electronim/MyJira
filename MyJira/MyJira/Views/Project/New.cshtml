@@ -1,29 +1,29 @@
 ﻿@model MyJira.Models.Project
 
-@{
-    ViewBag.Title = "Add a new project";
-}
+<div id="myjira">
+    <div class="row" id ="add-form">
+        @using (Html.BeginForm(actionName: "New", controllerName: "Project"))
+        {
 
-<h2>@ViewBag.Title</h2>
-<br />
+            @Html.Label("Name", "Project name")
+            ;
+            <br/>
+            @Html.TextBox("Name", null, new {@class = "form-control"})
+            @Html.ValidationMessageFor(m => m.Name, null, new {@class = "text-danger"})
+            <br/>
 
-@using (Html.BeginForm(actionName: "New", controllerName: "Project"))
-{
+            @Html.Label("Description", "Project description")
+            ;
+            <br/>
+            @Html.TextArea("Description", null, new {@class = "form-control"})
+            @Html.ValidationMessageFor(m => m.Description, null, new {@class = "text-danger"})
+            <br/>
 
-    @Html.Label("Name", "Project name");
-    <br />
-    @Html.TextBox("Name", null, new { @class = "form-control" })
-    @Html.ValidationMessageFor(m => m.Name, null, new { @class = "text-danger" })
-    <br />
+            @Html.HiddenFor(m => m.LeaderId)
+            ;
+            <br/>
 
-    @Html.Label("Description", "Project description");
-    <br />
-    @Html.TextBox("Description", null, new { @class = "form-control" })
-    @Html.ValidationMessageFor(m => m.Description, null, new { @class = "text-danger" })
-    <br />
-
-    @Html.HiddenFor(m => m.LeaderId);
-    <br />
-
-    <button class="btn btn-sm btn-success" type="submit">Create project</button>
-}
+            <button class="btn btn-sm btn-success add-button" type="submit">Create project</button>
+        }
+    </div>
+</div>

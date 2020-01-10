@@ -77,6 +77,7 @@ namespace MyJira.Controllers
                     TeamId = team.Id,
                     ProjectId = team.ProjectId
                 };
+                ViewBag.AllDevs = GetAllDevs(id);
                 return View(task);
             }
             else
@@ -117,7 +118,7 @@ namespace MyJira.Controllers
             var task = db.Tasks.Find(id);
             var project = db.Projects.Find(task.ProjectId);
             ViewBag.Project = project;
-            ViewBag.allDevs = GetAllDevs();
+            ViewBag.allDevs = GetAllDevs(task.TeamId);
             ViewBag.allStatuses = GetAllStatuses();
             return View(task);
         }
@@ -126,7 +127,7 @@ namespace MyJira.Controllers
         [Authorize(Roles = "Dev,Organizer,Administrator")]
         public ActionResult Edit(int id, Task newTask)
         {
-            ViewBag.allDevs = GetAllDevs();
+            ViewBag.allDevs = GetAllDevs(newTask.TeamId);
             ViewBag.allStatuses = GetAllStatuses();
             try
             {
@@ -175,11 +176,9 @@ namespace MyJira.Controllers
         }
 
         [NonAction]
-        public IEnumerable<SelectListItem> GetAllDevs()
+        public IEnumerable<SelectListItem> GetAllDevs(int teamId)
         {
-            var devs = from user in db.Users
-                       orderby user.UserName
-                       select user;
+            var devs = db.Users.Where(m => m.TeamId == teamId).ToList();
 
             return devs.Select(dev => new SelectListItem { Value = dev.Id.ToString(), Text = dev.UserName.ToString() }).ToList();
         }

@@ -1,35 +1,35 @@
 ﻿
 @model MyJira.Models.Task
+<div id="myjira">
+    <div class="row" id="add-form">
 
-@{
-    ViewBag.Title2 = "Create Task";
-}
+        @using (Html.BeginForm(actionName: "New", controllerName: "Task"))
+        {
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-<h2>@ViewBag.Title2</h2>
-<br />
+            @Html.Label("Title", "Task title")
+            <br />
+            @Html.TextBox("Title", null, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Title, null, new { @class = "text-danger" })
+            <br />
 
-@using (Html.BeginForm(actionName: "New", controllerName: "Task"))
-{
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            @Html.Label("Description", "Task Description")
+            <br />
+            @Html.TextArea("Description", null, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Description, null, new { @class = "text-danger" })
+            <br />
 
-    @Html.Label("Title", "Task title")
-    <br />
-    @Html.TextBox("Title", null, new { @class = "form-control" })
-    @Html.ValidationMessageFor(m => m.Title, null, new { @class = "text-danger" })
-    <br />
+            <i class="glyphicon glyphicon-th-list"></i> <label>Assignee</label>
+            @Html.DropDownListFor(m => m.AssigneeId, new SelectList(ViewBag.allDevs, "Value", "Text"), "None", new { @class = "form-control" })
+            <br/>
+            @Html.Hidden("StartTime", DateTime.Now, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.StartTime, null, new { @class = "text-danger" })
 
-    @Html.Label("Description", "Task Description")
-    <br />
-    @Html.TextArea("Description", null, new { @class = "form-control" })
-    @Html.ValidationMessageFor(m => m.Description, null, new { @class = "text-danger" })
-    <br />
+            @Html.HiddenFor(m => m.ReporterId)
+            @Html.HiddenFor(m => m.ProjectId)
+            @Html.HiddenFor(m => m.TeamId)
 
-    @Html.Hidden("StartTime", DateTime.Now, new { @class = "form-control" })
-    @Html.ValidationMessageFor(m => m.StartTime, null, new { @class = "text-danger" })
-
-    @Html.HiddenFor(m => m.ReporterId)
-    @Html.HiddenFor(m => m.ProjectId)
-    @Html.HiddenFor(m => m.TeamId)
-
-    <button class="btn btn-sm btn-success" type="submit">Create</button>
-}
+            <button class="btn btn-sm btn-success add-button" type="submit">Create Task</button>
+        }
+    </div>
+</div>
