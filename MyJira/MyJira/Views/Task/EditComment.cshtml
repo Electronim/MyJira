@@ -1,31 +1,30 @@
 ﻿@model MyJira.Models.Comment
 
-@{
-    ViewBag.Title = "Edit Comment";
-}
+<div id="myjira">
+    <div class="row" id="add-form" style="width: 70%; margin-left: 15%; position: relative">
 
-<h2>@ViewBag.Title</h2>
+        @using (Html.BeginForm(actionName: "EditComment", controllerName: "Task"))
+        {
+            @Html.HttpMethodOverride(HttpVerbs.Put)
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-@using (Html.BeginForm(actionName: "EditComment", controllerName: "Task"))
-{
-    @Html.HttpMethodOverride(HttpVerbs.Put)
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            @Html.HiddenFor(m => m.Id)
 
-    @Html.HiddenFor(m => m.Id)
+            <div class="form-group">
+                <div>
+                    @Html.TextArea("Content", Model.Content, new { @class = "form-control summernote" })
+                    @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
+                </div>
+            </div>
 
-    <div class="form-group">
-        <div>
-            @Html.TextArea("Content", Model.Content, new { @class = "form-control summernote" })
-            @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
-        </div>
+            @Html.HiddenFor(m => m.TaskId)
+            @Html.HiddenFor(m => m.UserId)
+            @Html.HiddenFor(m => m.Date)
+            <div class="form-group">
+                <div>
+                    <button class="btn btn-sm btn-success" type="submit" style="margin-left: 45%">Submit changes</button>
+                </div>
+            </div>
+        }
     </div>
-
-    @Html.HiddenFor(m => m.TaskId)
-    @Html.HiddenFor(m => m.UserId)
-    @Html.HiddenFor(m => m.Date)
-    <div class="form-group">
-        <div>
-            <button class="btn btn-sm btn-success" type="submit">Submit changes</button>
-        </div>
-    </div>
-}
+</div>
