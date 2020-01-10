@@ -7,11 +7,11 @@
             using (Html.BeginForm(actionName: "Delete", controllerName: "Project", method: FormMethod.Post, routeValues: new { id = @Model.Id }, htmlAttributes: new { style = "display: inline" }))
             {
                 @Html.HttpMethodOverride(HttpVerbs.Delete)
-                <button type="submit" class="btn btn-sm delete_proj_button">
+                <button type="submit" class="btn btn-sm delete_button">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
             }
-            <a class="btn btn-sm edit-proj-button" href="/Project/Edit/@Model.Id"><span class="glyphicon glyphicon-cog"></span></a>
+            <a class="btn btn-sm edit-button" href="/Project/Edit/@Model.Id"><span class="glyphicon glyphicon-cog"></span></a>
         }
 
 
@@ -20,8 +20,8 @@
         </div>
 
         <div class="proj-desc">
-            <div>
-                <h4>@Model.Description</h4>
+            <div style="background-color: white; border-radius: 10px 10px">
+                <h4 style="padding: 5px">@Model.Description</h4>
             </div>
         </div>
 

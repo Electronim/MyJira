@@ -53,6 +53,11 @@ namespace MyJira.Controllers
             ViewBag.userIsAdmin = User.IsInRole("Administrator");
             ViewBag.currentUser = User.Identity.GetUserId();
             ViewBag.TeamIdUser = db.Users.Find(userId).TeamId;
+
+            ViewBag.Todo = db.Tasks.Where(m => m.TeamId == id && m.Status == TaskStatus.Todo).ToList();
+            ViewBag.InProgress = db.Tasks.Where(m => m.TeamId == id && m.Status == TaskStatus.InProgress).ToList();
+            ViewBag.Done = db.Tasks.Where(m => m.TeamId == id && m.Status == TaskStatus.Done).ToList();
+
             return View(team);
         }
 

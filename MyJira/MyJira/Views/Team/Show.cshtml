@@ -1,88 +1,126 @@
 ﻿@model MyJira.Models.Team
 
-@{
-    ViewBag.Title = "Show";
-}
 
-<h1>@ViewBag.Title</h1>
+<div id="myjira">
+    <div class="row" id="main">
 
-<div class="panel panel-default">
-    <div class="panel-heading">@Model.Name</div>
-
-    <div class="panel-body">
-        part of the project named <i>@Model.Project.Name</i>
-
-        <br />
-        <br />
-        <div class="panel panel-default">
-            @if (Model.Devs.Count == 0)
+        @if (ViewBag.showButtons && (Model.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin))
+        {
+            using (Html.BeginForm(actionName: "Delete", controllerName: "Team", method: FormMethod.Post, routeValues: new { id = Model.Id }, htmlAttributes: new { style = "display: inline" }))
             {
-                <div class="panel-heading"> No devs in this team </div>
+                @Html.HttpMethodOverride(HttpVerbs.Delete)
+                <button type="submit" class="btn btn-sm delete_button">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
             }
-            else
-            {
-                <div class="panel-heading"> Devs: </div>
-                <div class="panel-body">
-                    @foreach (var user in Model.Devs)
+            <a class="btn btn-sm edit-button" href="/Team/Edit/@Model.Id"><span class="glyphicon glyphicon-cog"></span></a>
+        }
+
+        <div style="text-align: center">
+            <p style="font-size: 60px; font-family:cursive">@Model.Name</p>
+        </div>
+
+        <div id="tasks-container">
+            <div id="task-todo-container" class="col-md-2 panel panel-default">
+                <div class="panel-heading" style="text-align: center; margin-top: 3%; border:2px solid red; border-radius: 10px 10px">
+                    <strong style="font-size: 18px; color:red;">Todo</strong>
+                </div>
+                <div class="panel-body" style="margin-top: 5%">
+                    @foreach (var task in ViewBag.Todo)
                     {
-                        <strong>@user.UserName</strong>
+                        <div>
+                            <a class="btn btn-sm task-item" href="/Task/Show/@task.Id">
+                                @task.Title
+                            </a>
+                        </div>
+                        <br />
+                    }
+
+                    @if (Model.Id == ViewBag.TeamIdUser || Model.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin)
+                    {
+                        <div>
+                            <a class="btn btn-sm add-task-button" href="/Task/New/@Model.Id">
+                                <span class="glyphicon glyphicon-plus-sign"></span>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div id="task-in-progress-container" class="col-md-offset-0 col-md-2 panel panel-default">
+                <div class="panel-heading" style="text-align: center; margin-top: 3%; border:2px solid orange; border-radius: 10px 10px">
+                    <strong style="font-size: 18px; color:orange">InProgress</strong>
+                </div>
+                <div class="panel-body" style="margin-top: 5%">
+                    @foreach (var task in ViewBag.InProgress)
+                    {
+                        <div>
+                            <a class="btn btn-sm task-item" href="/Task/Show/@task.Id">
+                                @task.Title
+                            </a>
+                        </div>
                         <br />
                     }
                 </div>
-            }
-            @if (Model.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin)
-            {
-                <div class="panel-footer">
-                    @if (ViewBag.DevsWithoutTeam.Count > 1)
-                    {
-                        using (Html.BeginForm("AddDev", "Team", FormMethod.Post, new { enctype = "form-data" }))
-                        {
-                            @Html.HttpMethodOverride(HttpVerbs.Put)
-                            @Html.DropDownList("newDev", new SelectList(ViewBag.DevsWithoutTeam, "Value", "Text"), null, new { @class = "form-control" })
-                            <br />
-                            <input name="teamid" type="hidden" value="@Model.Id" />
-                            <button class="btn btn-sm btn-success" type="submit">Add Dev</button>
-                        }
-                    }
-                    else
-                    {
-                        <p> No Devs available to add </p>
-                    }
-                </div>
-            }
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading"> Tasks: </div>
-            <div class="panel-body">
-                @foreach (MyJira.Models.Task task in ViewBag.TasksPerTeam)
-                {
-                    <div>
-                        <span class="label label-default">@ViewBag.ProjectName</span> | @task.Title
-                        <a class="btn btn-sm btn-success" href="/Task/Show/@task.Id">View more</a>
-                    </div>
-                    <br />
-                }
             </div>
 
-            @if (Model.Id == ViewBag.TeamIdUser || Model.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin)
-            {
-                <div class="panel-footer">
-                    <a class="btn btn-sm btn-success" href="/Task/New/@Model.Id">Create Task</a>
+            <div id="task-done-container" class=" col-md-offset-0 col-md-2 panel panel-default">
+                <div class="panel-heading" style="text-align: center; margin-top: 3%;  border:2px solid forestgreen;  border-radius: 10px 10px">
+                    <strong style="font-size: 18px; color: forestgreen">Done</strong>
                 </div>
-            }
+                <div class="panel-body" style="margin-top: 5%">
+                    @foreach (var task in ViewBag.Done)
+                    {
+                        <div>
+                            <a class="btn btn-sm task-item" href="/Task/Show/@task.Id">
+                                @task.Title
+                            </a>
+                        </div>
+                        <br />
+                    }
+                </div>
+            </div>
         </div>
-    </div>
 
-    @if (ViewBag.showButtons && (Model.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin))
-    {
-        <div class="panel-footer">
-            <a class="btn btn-sm btn-success" href="/Team/Edit/@Model.Id">Edit</a>
-            @using (Html.BeginForm(actionName: "Delete", controllerName: "Team", method: FormMethod.Post, routeValues: new {id = Model.Id}, htmlAttributes: new {style = "display: inline"}))
-            {
-                @Html.HttpMethodOverride(HttpVerbs.Delete)
-                <button class="btn btn-sm btn-success" type="submit">Delete</button>
-            }
+        <div id="devs-container" class="col-md-3">
+            <div class="panel-heading" style="text-align: center; margin-top: 3%; border:2px solid black; border-radius: 10px 10px">
+                <strong style="font-size: 18px; color: black">
+                    Devs in team
+                </strong>
+            </div>
+            <div class="panel-body" style="margin-top: -3%; text-align: center;">
+                @foreach (var dev in Model.Devs)
+                {
+                    <div>
+                        <strong class="dev-item">
+                            @dev.UserName
+                        </strong>
+                    </div>
+                }
+            </div>
         </div>
-    }
+
+        @if (Model.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin)
+        {
+            <div id="devs-add-container">
+                <div style="text-align: center">
+                    @using (Html.BeginForm("AddDev", "Team", FormMethod.Post, new { enctype = "form-data", style = "padding: 2%;" }))
+                    {
+                        <br />
+                        @Html.HttpMethodOverride(HttpVerbs.Put)
+                        @Html.DropDownList("newDev", new SelectList(ViewBag.DevsWithoutTeam, "Value", "Text"), null, new { @class = "form-control" })
+                        <br />
+                        <input name="teamid" type="hidden" value="@Model.Id" />
+                        if (ViewBag.DevsWithoutTeam.Count > 1)
+                        {
+                            <button class="btn btn-sm" style="background-color: black; color:white" type="submit">Add Dev</button>
+                        } else
+                        {
+                            <p>No devs available</p>
+                        }
+                    }
+                </div>
+            </div>
+         }
+    </div>
 </div>
