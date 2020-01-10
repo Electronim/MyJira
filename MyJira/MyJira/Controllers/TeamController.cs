@@ -128,6 +128,11 @@ namespace MyJira.Controllers
         public ActionResult Delete(int id)
         {
             var team = db.Teams.Find(id);
+            var users = db.Users.Where(m => m.TeamId == team.Id).ToList();
+            foreach (var user in users)
+            {
+                user.TeamId = null;
+            }
             db.Teams.Remove(team);
             db.SaveChanges();
             TempData["message"] = "Team has been deleted successfully!";

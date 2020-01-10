@@ -135,6 +135,22 @@
 #view-proj-item {
     text-align: center;
 }
+#add-form {
+    margin-left: 37%;
+    margin-top: 7%;
+    width: 30%;
+    border: 2px solid #663399;
+    border-style: groove;
+    border-radius: 4px 4px;
+    padding: 2%;
+    background: #8B8BAE;
+    padding-top: 1%;
+}
+
+.add-button {
+    margin-left: 38%;
+}
+
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
@@ -152,5 +168,6 @@
 input,
 select,
 textarea {
-    max-width: 280px;
+    min-width: 280px;
 }
+

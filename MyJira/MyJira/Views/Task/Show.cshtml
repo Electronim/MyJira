@@ -72,7 +72,7 @@
 
     </div>
     
-    @if (Model.ReporterId == ViewBag.currentUser || ViewBag.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin)
+    @if (Model.ReporterId == ViewBag.currentUser || Model.AssigneeId == ViewBag.currentUser || ViewBag.Project.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin)
     {
         <div class="panel-footer">
             <a class="btn btn-sm btn-success" href="/Task/Edit/@Model.Id">Edit</a>
