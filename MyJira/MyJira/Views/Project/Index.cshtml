@@ -1,33 +1,30 @@
-﻿@{
-    ViewBag.Title = "List of Projects";
-}
+﻿<div id="myjira">
+    <div class="row" id="project-main">
+        @if (TempData.ContainsKey("message"))
+        {
+            <h3 class="alert alert-info" role="alert">@ViewBag.message</h3>
+        }
 
-<h2>@ViewBag.Title</h2>
-<hr />
+        <a class="btn btn-sm fixed-button" href="/Project/New"><span class="glyphicon glyphicon-plus-sign"></span></a>
+        <div class="container-items">
+            @foreach (MyJira.Models.Project project in ViewBag.Projects)
+            {
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">@project.Name</div>
 
-@if (TempData.ContainsKey("message"))
-{
-    <h3 class="alert alert-info" role="alert">@ViewBag.message</h3>
-}
+                        <div class="panel-body">
+                            <strong>Project description:</strong> @project.Description
+                            <br />
+                            <i class="glyphicon glyphicon-user"> </i><i> created by </i><strong> @project.Leader.UserName </strong>
+                        </div>
 
-@foreach (MyJira.Models.Project project in ViewBag.Projects)
-{
-    <div class="panel panel-default">
-        <div class="panel-heading">@project.Name</div>
-
-        <div class="panel-body">
-            <strong>Project description:</strong> @project.Description
-            <br />
-            <i class="glyphicon glyphicon-user"> </i><i> created by </i><strong> @project.Leader.UserName </strong>
-        </div>
-
-        <div class="panel-footer">
-            <a class="btn btn-sm btn-success" href="/Project/Show/@project.Id">View more</a>
+                        <div class="panel-footer">
+                            <a class="btn btn-sm button-crud" href="/Project/Show/@project.Id"><span class="glyphicon glyphicon-eye-open"></span><p style="display: inline; font-size: 25px;"> View more</p></a>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
-    <br />
-}
-
-<br />
-<a class="btn btn-sm btn-success" href="/Project/New">Add Project</a>
-<br />
+</div>

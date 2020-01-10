@@ -1,55 +1,41 @@
 ﻿@model MyJira.Models.Project
 
-@{
-    ViewBag.Title = "Show";
-}
+<div id="myjira">
+    <div class="row" id="project-main">
+        <h2>@Model.Name</h2>
 
-<h3>@ViewBag.Title</h3>
-
-<div class="panel panel-default">
-    <div class="panel-heading">@Model.Name</div>
-
-    <div class="panel-body">
         Project description: <strong>@Model.Description</strong>
         <br />
         <i class="glyphicon glyphicon-user"> </i><i> created by </i><strong> @Model.Leader.UserName </strong>
-        <br/>
-        <br/>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Teams:
-            </div>
-            <div class="panel-body">
-                @foreach (var team in @Model.Teams)
-                {
-                    <div>
-                        Name:<strong> @team.Name</strong>
-                        <br />
-                        <a class="btn btn-sm btn-success" href="/Team/Show/@team.Id">View more</a>
-                    </div>
-                    <br />
-                }
-            </div>
 
-            @if (ViewBag.showButtons && (Model.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin))
-            { 
-                <div class="panel-footer">
-                    <a class="btn btn-sm btn-success" href="/Team/New/@Model.Id">Add Team</a>
-                </div>
-            }
+        @if (ViewBag.showButtons && (Model.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin))
+        {
+            <a class="btn btn-sm btn-success" href="/Team/New/@Model.Id">Add Team</a>
+        }
 
-        </div>
-    </div>
-    
-    @if (ViewBag.showButtons && (Model.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin))
-    {
-        <div class="panel-footer">
-            <a class="btn btn-sm btn-success" href="/Project/Edit/@Model.Id">Edit</a>
-            @using (Html.BeginForm(actionName: "Delete", controllerName: "Project", method: FormMethod.Post, routeValues: new {id = @Model.Id}, htmlAttributes: new {style = "display: inline"}))
+        @if (ViewBag.showButtons && (Model.LeaderId == ViewBag.currentUser || ViewBag.userIsAdmin))
+        {
+            <a class="btn btn-sm btn-success" href="/Project/Edit/@Model.Id">Edit Proj</a>
+            using (Html.BeginForm(actionName: "Delete", controllerName: "Project", method: FormMethod.Post, routeValues: new { id = @Model.Id }, htmlAttributes: new { style = "display: inline" }))
             {
                 @Html.HttpMethodOverride(HttpVerbs.Delete)
-                <button class="btn btn-sm btn-success" type="submit">Delete</button>
+                <button class="btn btn-sm btn-success" type="submit">Delete Proj</button>
+            }
+        }
+
+        <div class="container-items">
+            @foreach (var team in @Model.Teams)
+            {
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <strong> @team.Name</strong>
+                            <a class="btn btn-sm btn-success" href="/Team/Show/@team.Id">View more</a>
+                        </div>
+                    </div>
+                </div>
             }
         </div>
-    }
+    </div>
 </div>
+

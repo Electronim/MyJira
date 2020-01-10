@@ -3,6 +3,78 @@
     padding-bottom: 20px;
 }
 
+#index-background {
+    background-color: #B2CEDE;
+    background-image: url("https://3kllhk1ibq34qk6sp3bhtox1-wpengine.netdna-ssl.com/wp-content/uploads/2018/01/image2018-1-10_11-6-34-854x760.png?fbclid=IwAR2xJTD4O8cC3heLkb7hYbBn16tKsX8APVNobz9M70rCYAz70FqT49D2T3I");
+    /*background-position: right;*/
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 100%;
+    top: 0;
+    position: fixed;
+    width: 105%;
+    right: 0;
+    margin: auto;
+    top: 10%;
+}
+
+#myjira {
+    background-color: #B2CEDE;
+    height: 100%;
+    position: fixed;
+    width: 100%;
+    right: 0;
+    margin: auto;
+    top: 10%;
+}
+
+#login-register-form {
+    margin-top: 13%;
+}
+
+#project-main {
+    padding: 20px;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.container-items {
+    margin: auto;
+    margin-top: 5%;
+    width: 75%;
+    height: 75%;
+    overflow-y: auto;
+    border-radius: 3px 4px;
+}
+
+.fixed-button {
+    color: #526760;
+    position: fixed;
+    right: 5%;
+    top: 50%;
+    width: 4%;
+    height: 7%;
+}
+
+.fixed-button > span {
+    font-size: 40px;
+}
+
+.button-crud {
+    color: #526760;
+    margin: auto;
+}
+
+.button-crud > span {
+    font-size: 20px;
+}
+
+
+::-webkit-scrollbar {
+    display: none;
+}
+
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
